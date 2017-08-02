@@ -26,6 +26,11 @@ isOpenBSD() {
     [[ $OSNAME == "OpenBSD" ]]
 }
 
+# Test if OS is NetBSD
+isNetBSD() {
+    [[ $OSNAME == "NetBSD" ]]
+}
+
 # Set path and other OS independent variables
 LANG=en_US.UTF-8
 CHARSET=en_US.UTF-8
@@ -50,6 +55,10 @@ elif isOpenBSD; then
     hash -d ports=/usr/ports
     hash -d src=/usr/src
     hash -d xenocara=/usr/xenocara
+elif isNetBSD; then
+    PATH=$PATH:/usr/X11R7/bin
+    PATH=$PATH:/usr/pkg/bin
+    hash -d pkgsrc=/usr/pkgsrc
 fi
 
 # Set pager
@@ -276,11 +285,6 @@ setopt no_bg_nice             # down;t lower priority for background jobs
 setopt no_rm_star_silent      # confirm an `rm *' or `rm path/*'
 setopt unset
 
-if ! isDarwin; then
-    setxkbmap -option compose:ralt # compose-key
-    print -Pn "\e]0; %n@%M: %~\a"  # terminal title
-fi
-
 # Print more information to user if positive
 VERBOSE=0
 verbose() {
@@ -447,6 +451,34 @@ fi
 
 #OpenBSD
 if isOpenBSD; then
+    alias ...='cd ../../'
+    alias da='du -sch'
+    alias dir='command ls -lSrah'
+    alias insecscp='scp -o "StrictHostKeyChecking=no" -o "UserKnownHostsFile=/dev/null"'
+    alias insecssh='ssh -o "StrictHostKeyChecking=no" -o "UserKnownHostsFile=/dev/null"'
+    alias l='command ls -l'
+    alias la='command ls -la'
+    alias lad='command ls -d .*(/)'
+    alias lh='command ls -hAl'
+    alias ll='command ls -l'
+    alias ls='command ls'
+    alias lsa='command ls -a .*(.)'
+    alias lsd='command ls -d *(/)'
+    alias lse='command ls -d *(/^F)'
+    alias lsnew='command ls -rtlh *(D.om[1,10])'
+    alias lsnewdir='command ls -rthdl *(/om[1,10]) .*(D/om[1,10])'
+    alias lsold='command ls -rtlh *(D.Om[1,10])'
+    alias lsolddir='command ls -rthdl *(/Om[1,10]) .*(D/Om[1,10])'
+    alias lssmall='command ls -Srl *(.oL[1,10])'
+    alias mq='hg -R $(readlink -f $(hg root)/.hg/patches)'
+    alias rmcdir='cd ..; rmdir $OLDPWD || cd $OLDPWD'
+    alias term2iso='echo '\''Setting terminal to iso mode'\'' ; print -n '\''\e%@'\'
+    alias term2utf='echo '\''Setting terminal to utf-8 mode'\''; print -n '\''\e%G'\'
+    alias url-quote='autoload -U url-quote-magic ; zle -N self-insert url-quote-magic'
+fi
+
+#NetBSD
+if isNetBSD; then
     alias ...='cd ../../'
     alias da='du -sch'
     alias dir='command ls -lSrah'
