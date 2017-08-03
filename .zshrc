@@ -31,6 +31,11 @@ isNetBSD() {
     [[ $OSNAME == "NetBSD" ]]
 }
 
+# Test if OS is DragonFly
+isDragonFly() {
+    [[ $OSNAME == "DragonFly" ]]
+}
+
 # Set path and other OS independent variables
 LANG=en_US.UTF-8
 CHARSET=en_US.UTF-8
@@ -196,6 +201,7 @@ zstyle ':completion:*:sudo:*' command-path /usr/local/sbin \
        /usr/bin        \
        /sbin           \
        /bin            \
+       /usr/pkg/bin    \
        /usr/X11R6/bin
 
 hosts=/dev/null
@@ -449,7 +455,6 @@ if isFreeBSD; then
     alias url-quote='autoload -U url-quote-magic ; zle -N self-insert url-quote-magic'
 fi
 
-#OpenBSD
 if isOpenBSD; then
     alias ...='cd ../../'
     alias da='du -sch'
@@ -490,6 +495,37 @@ if isNetBSD; then
     alias lh='command ls -hAl'
     alias ll='command ls -l'
     alias ls='command ls'
+    alias lsa='command ls -a .*(.)'
+    alias lsd='command ls -d *(/)'
+    alias lse='command ls -d *(/^F)'
+    alias lsnew='command ls -rtlh *(D.om[1,10])'
+    alias lsnewdir='command ls -rthdl *(/om[1,10]) .*(D/om[1,10])'
+    alias lsold='command ls -rtlh *(D.Om[1,10])'
+    alias lsolddir='command ls -rthdl *(/Om[1,10]) .*(D/Om[1,10])'
+    alias lssmall='command ls -Srl *(.oL[1,10])'
+    alias mq='hg -R $(readlink -f $(hg root)/.hg/patches)'
+    alias rmcdir='cd ..; rmdir $OLDPWD || cd $OLDPWD'
+    alias term2iso='echo '\''Setting terminal to iso mode'\'' ; print -n '\''\e%@'\'
+    alias term2utf='echo '\''Setting terminal to utf-8 mode'\''; print -n '\''\e%G'\'
+    alias url-quote='autoload -U url-quote-magic ; zle -N self-insert url-quote-magic'
+fi
+
+# DragonFly
+if isDragonFly; then
+    unset zle_bracketed_paste
+    alias ...='cd ../../'
+    alias da='du -sch'
+    alias dir='command ls -lSrah'
+    alias egrep='egrep --color=auto'
+    alias grep='grep --color=auto'
+    alias insecscp='scp -o "StrictHostKeyChecking=no" -o "UserKnownHostsFile=/dev/null"'
+    alias insecssh='ssh -o "StrictHostKeyChecking=no" -o "UserKnownHostsFile=/dev/null"'
+    alias l='command ls -l -G'
+    alias la='command ls -la -G'
+    alias lad='command ls -d .*(/)'
+    alias lh='command ls -hAl -G'
+    alias ll='command ls -l -G'
+    alias ls='command ls -G'
     alias lsa='command ls -a .*(.)'
     alias lsd='command ls -d *(/)'
     alias lse='command ls -d *(/^F)'
