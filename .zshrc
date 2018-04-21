@@ -112,14 +112,14 @@ bindkey '\ew' kill-region     # esc+w kill from cursor to mark
 bindkey -s '\el' 'ls\n'       # esc+l execute ls command
 
 # Configure completions
-autoload -Uz compinit && compinit -u
+autoload -Uz compaudit && compinit && compinit -u
 zmodload -i zsh/complist
 
 setopt hash_list_all          # hash everything before complettion
 setopt auto_menu              # use menu completion
 setopt completealiases        # complete aliases
 setopt complete_in_word       # complete within a word or phrase
-setopt always_to_end          # move cursor to end of complettion
+setopt always_to_end          # move cursor to end of completion
 setopt always_last_prompt     # return to last prompt
 setopt list_ambiguous         # complete until completion is ambiguous
 
@@ -210,7 +210,7 @@ if [ -r .ssh/known_hosts ]; then
 fi
 zstyle ':completion:*' hosts $hosts
 
-# run rehash on completion so new installed program are found automatically:
+# run rehash on completion so newly installed program are found automatically
 _force_rehash() {
     (( CURRENT == 1 )) && rehash
     return 1
@@ -233,7 +233,7 @@ zstyle ':vcs_info:*' formats "%{$fg[magenta]%}%c%{$fg[green]%}%u\
 
 # Prompt configuration
 load_custom_prompt() {
-    setopt PROMPT_SUBST       # needed for vcs_info_msg_0
+    setopt PROMPT_SUBST       # needed for vcs_info_msg_0_
     color="blue"
     if [ "$USER" = "root" ]; then
 	color="red"
@@ -268,7 +268,7 @@ setopt hist_ignore_space      # ignore space prefixed commands
 setopt hist_reduce_blanks     # trim blanks
 setopt hist_verify            # show command before executing history
 setopt inc_append_history     # immediately add commands
-setopt share_history          # share histpry between sessions
+setopt share_history          # share history between sessions
 setopt bang_hist              # ! syntax to access history
 
 # Misc options
@@ -279,7 +279,7 @@ setopt extended_glob          # activate complex pattern globbing
 setopt noclobber              # don't overwrite file, use >! to do so
 setopt longlistjobs           # display pid when suspending
 setopt notify                 # report status of background jobs
-setopt print_exit_value       # print return value if non-zero
+unsetopt print_exit_value     # do not print return value if non-zero
 setopt interactivecomments    # turn on comments
 setopt hash_list_all          # hash command path before completion
 setopt complete_in_word       # complete at any place in a word
@@ -287,12 +287,12 @@ setopt nobeep                 # no bell on error
 setopt nohup                  # no hup signal at shell exit
 setopt noglobdots             # don't match dotfiles
 setopt noshwordsplit          # use zsh style word splitting
-setopt no_bg_nice             # down;t lower priority for background jobs
+setopt no_bg_nice             # don't lower priority for background jobs
 setopt no_rm_star_silent      # confirm an `rm *' or `rm path/*'
 setopt unset
 
 # Print more information to user if positive
-VERBOSE=0
+VERBOSE=1
 verbose() {
     [[ $VERBOSE -gt 0 ]]
 }
@@ -308,6 +308,11 @@ cl() {
     fi
 }
 
+# Print a list of modified files
+function modified () {
+    print -l -- *(m-${1:-1})
+}
+
 # Switch to directory, create it if necessary
 mkcd() {
     if [ $ARGC -ne 1 ]; then
@@ -317,6 +322,9 @@ mkcd() {
 
     if [ ! -d $1 ]; then
 	command mkdir -p $1
+	if verbose; then
+	    printf 'created directory `%s'\'', cd-ing into it.\n' "$1"
+	fi
     else
 	if verbose; then
 	    printf '`%s'\'' already exists: cd-ing into directory.\n' "$1"
@@ -328,9 +336,14 @@ mkcd() {
 
 # Switch to LABDIR root directory or a project subdir, create it if needed
 lab() {
-    LABDIR=$HOME/Lab
-    mkcd $LABDIR
-    mkcd $LABDIR/$1
+    local LABDIR=$HOME/Lab
+    if [ $ARGC -eq 0 ]; then
+	mkcd $LABDIR
+    elif [ $ARGC -eq 1 ]; then
+	mkcd $LABDIR/$1
+    else
+	print 'usage: lab <directory>\n'
+    fi
 }
 
 # Aliases
@@ -370,7 +383,6 @@ if isLinux; then
     alias mq='hg -R $(readlink -f $(hg root)/.hg/patches)'
     alias new=modified
     alias rmcdir='cd ..; rmdir $OLDPWD || cd $OLDPWD'
-    alias se=simple-extract
     alias term2iso='echo '\''Setting terminal to iso mode'\'' ; print -n '\''\e%@'\'
     alias term2utf='echo '\''Setting terminal to utf-8 mode'\''; print -n '\''\e%G'\'
     alias url-quote='autoload -U url-quote-magic ; zle -N self-insert url-quote-magic'
