@@ -112,10 +112,10 @@ bindkey '\ew' kill-region     # esc+w kill from cursor to mark
 bindkey -s '\el' 'ls\n'       # esc+l execute ls command
 
 # Configure completions
-autoload -Uz compaudit && compinit && compinit -u
+autoload -U compaudit compinit
 zmodload -i zsh/complist
 
-setopt hash_list_all          # hash everything before complettion
+setopt hash_list_all          # hash everything before completion
 setopt auto_menu              # use menu completion
 setopt completealiases        # complete aliases
 setopt complete_in_word       # complete within a word or phrase
