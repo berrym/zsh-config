@@ -37,38 +37,44 @@ isDragonFly() {
 }
 
 # Set path and other OS independent variables
+typeset -U path
+path=(~/bin
+      /usr/local/bin
+      /usr/local/sbin
+      /usr/bin
+      /usr/sbin
+      /bin
+      /sbin
+      $path)
 LANG=en_US.UTF-8
 CHARSET=en_US.UTF-8
-PATH=$HOME/bin:/usr/local/bin:/usr/local/sbin
-PATH=$PATH:/usr/bin:/usr/sbin:/bin:/sbin
 OSNAME=$(uname -s)        # Determine OS
 
 if isLinux; then
     ;
 elif isDarwin; then
-    PATH=$PATH:/usr/X11/bin
+    path=($path /usr/x11/bin)
     # HomeBrew GitHub Key
     export HOMEBREW_GITHUB_API_TOKEN=60f48f8a8684dcd786edd0011cb61b39fd7aacb6
     export HOMEBREW_CC=clang
 elif isFreeBSD; then
-    PATH=$PATH:/usr/X11R6/bin
+    path=($path /usr/X11R6/bin)
     hash -d ports=/usr/ports
     hash -d src=/usr/src
 elif isOpenBSD; then
-    PATH=$PATH:/usr/X11R6/bin
+    path=($path /usr/X11R6/bin)
     TERM=xterm-xfree86
     hash -d ports=/usr/ports
     hash -d src=/usr/src
     hash -d xenocara=/usr/xenocara
 elif isNetBSD; then
-    PATH=$PATH:/usr/X11R7/bin
-    PATH=$PATH:/usr/pkg/bin
+    path=($path /usr/pkg/bin /usr/X11R7/bin)
     hash -d pkgsrc=/usr/pkgsrc
 fi
 
 # Set pager
 command -v less &>/dev/null
-if [ $? -eq 0 ]; then
+if [[ $? -eq 0 ]]; then
     PAGER=less
 else
     PAGER=more
@@ -76,7 +82,7 @@ fi
 
 # Check for the mg editor, else default to vi
 command -v mg &>/dev/null
-if [ $? -eq 0 ]; then
+if [[ $? -eq 0 ]]; then
     EDITOR=mg
 else
     EDITOR=vi
@@ -115,7 +121,7 @@ bindkey -s '\el' 'ls\n'       # esc+l execute ls command
 autoload -U compaudit compinit
 zmodload -i zsh/complist
 
-setopt hash_list_all          # hash everything before completion
+setopt hash_list_all          # hash everything before complettion
 setopt auto_menu              # use menu completion
 setopt completealiases        # complete aliases
 setopt complete_in_word       # complete within a word or phrase
@@ -205,12 +211,12 @@ zstyle ':completion:*:sudo:*' command-path /usr/local/sbin \
        /usr/X11R6/bin
 
 hosts=/dev/null
-if [ -r .ssh/known_hosts ]; then
+if [[ -r .ssh/known_hosts ]]; then
     hosts=($(((awk '{print $1}' .ssh/known_hosts | tr , '\n'); ) | sort -u))
 fi
 zstyle ':completion:*' hosts $hosts
 
-# run rehash on completion so newly installed program are found automatically
+# run rehash on completion so newly installed programs are found automatically
 _force_rehash() {
     (( CURRENT == 1 )) && rehash
     return 1
@@ -235,7 +241,7 @@ zstyle ':vcs_info:*' formats "%{$fg[magenta]%}%c%{$fg[green]%}%u\
 load_custom_prompt() {
     setopt PROMPT_SUBST       # needed for vcs_info_msg_0_
     color="blue"
-    if [ "$USER" = "root" ]; then
+    if [[ "$USER" == "root" ]]; then
 	color="red"
     fi
     PROMPT="%{$fg[$color]%}%n%{$reset_color%} %B%~%b %% "
@@ -255,7 +261,7 @@ setopt pushd_silent           # no dir stack after pushd or popd
 setopt pushd_to_home          # `pushd` = `pushd $HOME`
 
 # Configure history
-if [ -z $HISTFILE ]; then
+if [[ -z $HISTFILE ]]; then
     HISTFILE=$HOME/.zsh_history
 fi
 
@@ -297,9 +303,53 @@ verbose() {
     [[ $VERBOSE -gt 0 ]]
 }
 
+# utility functions
+# this function checks if a command exists and returns either true
+# or false. This avoids using 'which' and 'whence', which will
+# avoid problems with aliases for which on certain weird systems. :-)
+# Usage: check_com [-c|-g] word
+#   -c  only checks for external commands
+#   -g  does the usual tests and also checks for global aliases
+check_com () {
+    local -i comonly gatoo
+    comonly=0
+    gatoo=0
+
+    if [[ $1 == '-c' ]] ; then
+	comonly=1
+	shift 1
+    elif [[ $1 == '-g' ]] ; then
+	gatoo=1
+	shift 1
+    fi
+
+    if (( ${#argv} != 1 )) ; then
+	printf 'usage: check_com [-c|-g] <command>\n' >&2
+	return 1
+    fi
+
+    if (( comonly > 0 )) ; then
+	(( ${+commands[$1]}  )) && return 0
+	return 1
+    fi
+
+    if     (( ${+commands[$1]}    )) \
+	|| (( ${+functions[$1]}   )) \
+	|| (( ${+aliases[$1]}     )) \
+	|| (( ${+reswords[(r)$1]} )) ; then
+	return 0
+    fi
+
+    if (( gatoo > 0 )) && (( ${+galiases[$1]} )) ; then
+	return 0
+    fi
+
+    return 1
+}
+
 # Switch to a directoy the list it's contents
 cl() {
-    if [ -d $1 ]; then
+    if [[ -d $1 ]]; then
 	cd $1 && ls -a
     else
 	if verbose; then
@@ -309,18 +359,18 @@ cl() {
 }
 
 # Print a list of modified files
-function modified () {
+modified () {
     print -l -- *(m-${1:-1})
 }
 
 # Switch to directory, create it if necessary
 mkcd() {
-    if [ $ARGC -ne 1 ]; then
+    if [[ $ARGC -ne 1 ]]; then
 	print 'usage: mkcd <new-directory>\n'
 	return 1;
     fi
 
-    if [ ! -d $1 ]; then
+    if [[ ! -d $1 ]]; then
 	command mkdir -p $1
 	if verbose; then
 	    printf 'created directory `%s'\'', cd-ing into it.\n' "$1"
@@ -337,218 +387,155 @@ mkcd() {
 # Switch to LABDIR root directory or a project subdir, create it if needed
 lab() {
     local LABDIR=$HOME/Lab
-    if [ $ARGC -eq 0 ]; then
+    if [[ $ARGC -eq 0 ]]; then
 	mkcd $LABDIR
-    elif [ $ARGC -eq 1 ]; then
+    elif [[ $ARGC -eq 1 ]]; then
 	mkcd $LABDIR/$1
     else
 	print 'usage: lab <directory>\n'
     fi
 }
 
-# Aliases
-# GNU/Linux
-if isLinux; then
-    alias ...='cd ../../'
-    alias da='du -sch'
-    alias dir='command ls -lSrah'
-    alias egrep='egrep --color=auto'
-    alias fgrep='fgrep --color=auto'
-    alias grep='grep --color=auto'
-    alias hbp=hg-buildpackage
-    alias help-zshglob=H-Glob
-    alias insecscp='scp -o "StrictHostKeyChecking=no" -o "UserKnownHostsFile=/dev/null"'
-    alias insecssh='ssh -o "StrictHostKeyChecking=no" -o "UserKnownHostsFile=/dev/null"'
-    alias l='command ls -l --color=auto'
-    alias l.='ls -d .* --color=auto'
-    alias la='command ls -la --color=auto'
-    alias lad='command ls -d .*(/)'
-    alias lh='command ls -hAl --color=auto'
-    alias ll='command ls -l --color=auto'
-    alias ls='command ls --color=auto'
-    alias lsa='command ls -a .*(.)'
-    alias lsbig='command ls -flh *(.OL[1,10])'
-    alias lsd='command ls -d *(/)'
-    alias lse='command ls -d *(/^F)'
-    alias lsl='command ls -l *(@)'
-    alias lsnew='command ls -rtlh *(D.om[1,10])'
-    alias lsnewdir='command ls -rthdl *(/om[1,10]) .*(D/om[1,10])'
-    alias lsold='command ls -rtlh *(D.Om[1,10])'
-    alias lsolddir='command ls -rthdl *(/Om[1,10]) .*(D/Om[1,10])'
-    alias lss='command ls -l *(s,S,t)'
-    alias lssmall='command ls -Srl *(.oL[1,10])'
-    alias lsw='command ls -ld *(R,W,X.^ND/)'
-    alias lsx='command ls -l *(*)'
-    alias mdstat='cat /proc/mdstat'
-    alias mq='hg -R $(readlink -f $(hg root)/.hg/patches)'
-    alias new=modified
-    alias rmcdir='cd ..; rmdir $OLDPWD || cd $OLDPWD'
-    alias term2iso='echo '\''Setting terminal to iso mode'\'' ; print -n '\''\e%@'\'
-    alias term2utf='echo '\''Setting terminal to utf-8 mode'\''; print -n '\''\e%G'\'
-    alias url-quote='autoload -U url-quote-magic ; zle -N self-insert url-quote-magic'
-    alias which='(alias; declare -f) | /usr/bin/which --tty-only --read-alias --read-functions --show-tilde --show-dot'
-    alias which-command=whence
-    alias xzegrep='xzegrep --color=auto'
-    alias xzfgrep='xzfgrep --color=auto'
-    alias xzgrep='xzgrep --color=auto'
-    alias zegrep='zegrep --color=auto'
-    alias zfgrep='zfgrep --color=auto'
-    alias zgrep='zgrep --color=auto'
-fi
+# Usage: simple-extract <file>
+# Using option -d deletes the original archive file.
+#f5# Smart archive extractor
+simple-extract () {
+    setopt extended_glob noclobber
+    local ARCHIVE DELETE_ORIGINAL DECOMP_CMD USES_STDIN USES_STDOUT GZTARGET WGET_CMD
+    local RC=0
+    zparseopts -D -E "d=DELETE_ORIGINAL"
+    for ARCHIVE in "${@}"; do
+	case $ARCHIVE in
+	    *(tar.bz2|tbz2|tbz))
+		DECOMP_CMD="tar -xvjf -"
+		USES_STDIN=true
+		USES_STDOUT=false
+		;;
+	    *(tar.gz|tgz))
+		DECOMP_CMD="tar -xvzf -"
+		USES_STDIN=true
+		USES_STDOUT=false
+		;;
+	    *(tar.xz|txz|tar.lzma))
+		DECOMP_CMD="tar -xvJf -"
+		USES_STDIN=true
+		USES_STDOUT=false
+		;;
+	    *tar)
+		DECOMP_CMD="tar -xvf -"
+		USES_STDIN=true
+		USES_STDOUT=false
+		;;
+	    *rar)
+		DECOMP_CMD="unrar x"
+		USES_STDIN=false
+		USES_STDOUT=false
+		;;
+	    *lzh)
+		DECOMP_CMD="lha x"
+		USES_STDIN=false
+		USES_STDOUT=false
+		;;
+	    *7z)
+		DECOMP_CMD="7z x"
+		USES_STDIN=false
+		USES_STDOUT=false
+		;;
+	    *(zip|jar))
+		DECOMP_CMD="unzip"
+		USES_STDIN=false
+		USES_STDOUT=false
+		;;
+	    *deb)
+		DECOMP_CMD="ar -x"
+		USES_STDIN=false
+		USES_STDOUT=false
+		;;
+	    *bz2)
+		DECOMP_CMD="bzip2 -d -c -"
+		USES_STDIN=true
+		USES_STDOUT=true
+		;;
+	    *(gz|Z))
+		DECOMP_CMD="gzip -d -c -"
+		USES_STDIN=true
+		USES_STDOUT=true
+		;;
+	    *(xz|lzma))
+		DECOMP_CMD="xz -d -c -"
+		USES_STDIN=true
+		USES_STDOUT=true
+		;;
+	    *)
+		print "ERROR: '$ARCHIVE' has unrecognized archive type." >&2
+		RC=$((RC+1))
+		continue
+		;;
+	esac
 
-# Mac
-if isDarwin; then
-    alias ...='cd ../../'
-    alias da='du -sch'
-    alias dir='command ls -lSrah'
-    alias egrep='egrep --color=auto'
-    alias grep='grep --color=auto'
-    alias hbp=hg-buildpackage
-    alias help-zshglob=H-Glob
-    alias insecscp='scp -o "StrictHostKeyChecking=no" -o "UserKnownHostsFile=/dev/null"'
-    alias insecssh='ssh -o "StrictHostKeyChecking=no" -o "UserKnownHostsFile=/dev/null"'
-    alias l='command ls -l -G'
-    alias la='command ls -la -G'
-    alias lad='command ls -d .*(/)'
-    alias lh='command ls -hAl -G'
-    alias ll='command ls -l -G'
-    alias ls='command ls -G'
-    alias lsa='command ls -a .*(.)'
-    alias lsbig='command ls -flh *(.OL[1,10])'
-    alias lsd='command ls -d *(/)'
-    alias lse='command ls -d *(/^F)'
-    alias lsl='command ls -l *(@)'
-    alias lsnew='command ls -rtlh *(D.om[1,10])'
-    alias lsnewdir='command ls -rthdl *(/om[1,10]) .*(D/om[1,10])'
-    alias lsold='command ls -rtlh *(D.Om[1,10])'
-    alias lsolddir='command ls -rthdl *(/Om[1,10]) .*(D/Om[1,10])'
-    alias lss='command ls -l *(s,S,t)'
-    alias lssmall='command ls -Srl *(.oL[1,10])'
-    alias lsw='command ls -ld *(R,W,X.^ND/)'
-    alias lsx='command ls -l *(*)'
-    alias mdstat='cat /proc/mdstat'
-    alias mq='hg -R $(readlink -f $(hg root)/.hg/patches)'
-    alias new=modified
-    alias rmcdir='cd ..; rmdir $OLDPWD || cd $OLDPWD'
-    alias se=simple-extract
-    alias term2iso='echo '\''Setting terminal to iso mode'\'' ; print -n '\''\e%@'\'
-    alias term2utf='echo '\''Setting terminal to utf-8 mode'\''; print -n '\''\e%G'\'
-    alias url-quote='autoload -U url-quote-magic ; zle -N self-insert url-quote-magic'
-    alias which-command=whence
-fi
+	if ! check_com ${DECOMP_CMD[(w)1]}; then
+	    echo "ERROR: ${DECOMP_CMD[(w)1]} not installed." >&2
+	    RC=$((RC+2))
+	    continue
+	fi
 
-# FreeBSD
-if isFreeBSD; then
-    alias ...='cd ../../'
-    alias da='du -sch'
-    alias dir='command ls -lSrah'
-    alias egrep='egrep --color=auto'
-    alias grep='grep --color=auto'
-    alias insecscp='scp -o "StrictHostKeyChecking=no" -o "UserKnownHostsFile=/dev/null"'
-    alias insecssh='ssh -o "StrictHostKeyChecking=no" -o "UserKnownHostsFile=/dev/null"'
-    alias l='command ls -l -G'
-    alias la='command ls -la -G'
-    alias lad='command ls -d .*(/)'
-    alias lh='command ls -hAl -G'
-    alias ll='command ls -l -G'
-    alias ls='command ls -G'
-    alias lsa='command ls -a .*(.)'
-    alias lsd='command ls -d *(/)'
-    alias lse='command ls -d *(/^F)'
-    alias lsnew='command ls -rtlh *(D.om[1,10])'
-    alias lsnewdir='command ls -rthdl *(/om[1,10]) .*(D/om[1,10])'
-    alias lsold='command ls -rtlh *(D.Om[1,10])'
-    alias lsolddir='command ls -rthdl *(/Om[1,10]) .*(D/Om[1,10])'
-    alias lssmall='command ls -Srl *(.oL[1,10])'
-    alias mq='hg -R $(readlink -f $(hg root)/.hg/patches)'
-    alias rmcdir='cd ..; rmdir $OLDPWD || cd $OLDPWD'
-    alias term2iso='echo '\''Setting terminal to iso mode'\'' ; print -n '\''\e%@'\'
-    alias term2utf='echo '\''Setting terminal to utf-8 mode'\''; print -n '\''\e%G'\'
-    alias url-quote='autoload -U url-quote-magic ; zle -N self-insert url-quote-magic'
-fi
+	GZTARGET="${ARCHIVE:t:r}"
+	if [[ -f $ARCHIVE ]] ; then
 
-if isOpenBSD; then
-    alias ...='cd ../../'
-    alias da='du -sch'
-    alias dir='command ls -lSrah'
-    alias insecscp='scp -o "StrictHostKeyChecking=no" -o "UserKnownHostsFile=/dev/null"'
-    alias insecssh='ssh -o "StrictHostKeyChecking=no" -o "UserKnownHostsFile=/dev/null"'
-    alias l='command ls -l'
-    alias la='command ls -la'
-    alias lad='command ls -d .*(/)'
-    alias lh='command ls -hAl'
-    alias ll='command ls -l'
-    alias ls='command ls'
-    alias lsa='command ls -a .*(.)'
-    alias lsd='command ls -d *(/)'
-    alias lse='command ls -d *(/^F)'
-    alias lsnew='command ls -rtlh *(D.om[1,10])'
-    alias lsnewdir='command ls -rthdl *(/om[1,10]) .*(D/om[1,10])'
-    alias lsold='command ls -rtlh *(D.Om[1,10])'
-    alias lsolddir='command ls -rthdl *(/Om[1,10]) .*(D/Om[1,10])'
-    alias lssmall='command ls -Srl *(.oL[1,10])'
-    alias mq='hg -R $(readlink -f $(hg root)/.hg/patches)'
-    alias rmcdir='cd ..; rmdir $OLDPWD || cd $OLDPWD'
-    alias term2iso='echo '\''Setting terminal to iso mode'\'' ; print -n '\''\e%@'\'
-    alias term2utf='echo '\''Setting terminal to utf-8 mode'\''; print -n '\''\e%G'\'
-    alias url-quote='autoload -U url-quote-magic ; zle -N self-insert url-quote-magic'
-fi
+	    print "Extracting '$ARCHIVE' ..."
+	    if $USES_STDIN; then
+		if $USES_STDOUT; then
+		    ${=DECOMP_CMD} < "$ARCHIVE" > $GZTARGET
+		else
+		    ${=DECOMP_CMD} < "$ARCHIVE"
+		fi
+	    else
+		if $USES_STDOUT; then
+		    ${=DECOMP_CMD} "$ARCHIVE" > $GZTARGET
+		else
+		    ${=DECOMP_CMD} "$ARCHIVE"
+		fi
+	    fi
+	    [[ $? -eq 0 && -n "$DELETE_ORIGINAL" ]] && rm -f "$ARCHIVE"
 
-#NetBSD
-if isNetBSD; then
-    alias ...='cd ../../'
-    alias da='du -sch'
-    alias dir='command ls -lSrah'
-    alias insecscp='scp -o "StrictHostKeyChecking=no" -o "UserKnownHostsFile=/dev/null"'
-    alias insecssh='ssh -o "StrictHostKeyChecking=no" -o "UserKnownHostsFile=/dev/null"'
-    alias l='command ls -l'
-    alias la='command ls -la'
-    alias lad='command ls -d .*(/)'
-    alias lh='command ls -hAl'
-    alias ll='command ls -l'
-    alias ls='command ls'
-    alias lsa='command ls -a .*(.)'
-    alias lsd='command ls -d *(/)'
-    alias lse='command ls -d *(/^F)'
-    alias lsnew='command ls -rtlh *(D.om[1,10])'
-    alias lsnewdir='command ls -rthdl *(/om[1,10]) .*(D/om[1,10])'
-    alias lsold='command ls -rtlh *(D.Om[1,10])'
-    alias lsolddir='command ls -rthdl *(/Om[1,10]) .*(D/Om[1,10])'
-    alias lssmall='command ls -Srl *(.oL[1,10])'
-    alias mq='hg -R $(readlink -f $(hg root)/.hg/patches)'
-    alias rmcdir='cd ..; rmdir $OLDPWD || cd $OLDPWD'
-    alias term2iso='echo '\''Setting terminal to iso mode'\'' ; print -n '\''\e%@'\'
-    alias term2utf='echo '\''Setting terminal to utf-8 mode'\''; print -n '\''\e%G'\'
-    alias url-quote='autoload -U url-quote-magic ; zle -N self-insert url-quote-magic'
-fi
+	elif [[ "$ARCHIVE" == (#s)(https|http|ftp)://* ]] ; then
+	    if check_com curl; then
+		WGET_CMD="curl -L -s -o -"
+	    elif check_com wget; then
+		WGET_CMD="wget -q -O -"
+	    elif check_com fetch; then
+		WGET_CMD="fetch -q -o -"
+	    else
+		print "ERROR: neither wget, curl nor fetch is installed" >&2
+		RC=$((RC+4))
+		continue
+	    fi
+	    print "Downloading and Extracting '$ARCHIVE' ..."
+	    if $USES_STDIN; then
+		if $USES_STDOUT; then
+		    ${=WGET_CMD} "$ARCHIVE" | ${=DECOMP_CMD} > $GZTARGET
+		    RC=$((RC+$?))
+		else
+		    ${=WGET_CMD} "$ARCHIVE" | ${=DECOMP_CMD}
+		    RC=$((RC+$?))
+		fi
+	    else
+		if $USES_STDOUT; then
+		    ${=DECOMP_CMD} =(${=WGET_CMD} "$ARCHIVE") > $GZTARGET
+		else
+		    ${=DECOMP_CMD} =(${=WGET_CMD} "$ARCHIVE")
+		fi
+	    fi
 
-# DragonFly
-if isDragonFly; then
-    unset zle_bracketed_paste
-    alias ...='cd ../../'
-    alias da='du -sch'
-    alias dir='command ls -lSrah'
-    alias egrep='egrep --color=auto'
-    alias grep='grep --color=auto'
-    alias insecscp='scp -o "StrictHostKeyChecking=no" -o "UserKnownHostsFile=/dev/null"'
-    alias insecssh='ssh -o "StrictHostKeyChecking=no" -o "UserKnownHostsFile=/dev/null"'
-    alias l='command ls -l -G'
-    alias la='command ls -la -G'
-    alias lad='command ls -d .*(/)'
-    alias lh='command ls -hAl -G'
-    alias ll='command ls -l -G'
-    alias ls='command ls -G'
-    alias lsa='command ls -a .*(.)'
-    alias lsd='command ls -d *(/)'
-    alias lse='command ls -d *(/^F)'
-    alias lsnew='command ls -rtlh *(D.om[1,10])'
-    alias lsnewdir='command ls -rthdl *(/om[1,10]) .*(D/om[1,10])'
-    alias lsold='command ls -rtlh *(D.Om[1,10])'
-    alias lsolddir='command ls -rthdl *(/Om[1,10]) .*(D/Om[1,10])'
-    alias lssmall='command ls -Srl *(.oL[1,10])'
-    alias mq='hg -R $(readlink -f $(hg root)/.hg/patches)'
-    alias rmcdir='cd ..; rmdir $OLDPWD || cd $OLDPWD'
-    alias term2iso='echo '\''Setting terminal to iso mode'\'' ; print -n '\''\e%@'\'
-    alias term2utf='echo '\''Setting terminal to utf-8 mode'\''; print -n '\''\e%G'\'
-    alias url-quote='autoload -U url-quote-magic ; zle -N self-insert url-quote-magic'
+	else
+	    print "ERROR: '$ARCHIVE' is neither a valid file nor a supported URI." >&2
+	    RC=$((RC+8))
+	fi
+    done
+    return $RC
+}
+
+# Load aliases
+if [[ -r ~/.aliasrc ]]; then
+    . ~/.aliasrc
 fi
