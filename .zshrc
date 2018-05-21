@@ -118,10 +118,10 @@ bindkey '\ew' kill-region     # esc+w kill from cursor to mark
 bindkey -s '\el' 'ls\n'       # esc+l execute ls command
 
 # Configure completions
-autoload -U compaudit compinit
+autoload -Uz compaudit compinit && compaudit && compinit
 zmodload -i zsh/complist
 
-setopt hash_list_all          # hash everything before complettion
+setopt hash_list_all          # hash everything before completion
 setopt auto_menu              # use menu completion
 setopt completealiases        # complete aliases
 setopt complete_in_word       # complete within a word or phrase
@@ -285,7 +285,6 @@ setopt extended_glob          # activate complex pattern globbing
 setopt noclobber              # don't overwrite file, use >! to do so
 setopt longlistjobs           # display pid when suspending
 setopt notify                 # report status of background jobs
-unsetopt print_exit_value     # do not print return value if non-zero
 setopt interactivecomments    # turn on comments
 setopt hash_list_all          # hash command path before completion
 setopt complete_in_word       # complete at any place in a word
@@ -296,6 +295,7 @@ setopt noshwordsplit          # use zsh style word splitting
 setopt no_bg_nice             # don't lower priority for background jobs
 setopt no_rm_star_silent      # confirm an `rm *' or `rm path/*'
 setopt unset
+unsetopt print_exit_value     # do not print return value if non-zero
 
 # Print more information to user if positive
 VERBOSE=1
@@ -311,6 +311,8 @@ verbose() {
 #   -c  only checks for external commands
 #   -g  does the usual tests and also checks for global aliases
 check_com () {
+    emulate -L zsh
+
     local -i comonly gatoo
     comonly=0
     gatoo=0
@@ -349,11 +351,18 @@ check_com () {
 
 # Switch to a directoy the list it's contents
 cl() {
+    emulate -L zsh
+
+    if [[ $ARGC -ne 1 ]]; then
+	print 'usage: cl <directory>'
+	return 1;
+    fi
+
     if [[ -d $1 ]]; then
 	cd $1 && ls -a
     else
 	if verbose; then
-	    print 'directory $1 does not exist.\n'
+	    print "directory \`$1' does not exist.\n"
 	fi
     fi
 }
@@ -365,6 +374,8 @@ modified () {
 
 # Switch to directory, create it if necessary
 mkcd() {
+    emulate -L zsh
+
     if [[ $ARGC -ne 1 ]]; then
 	print 'usage: mkcd <new-directory>\n'
 	return 1;
@@ -386,7 +397,10 @@ mkcd() {
 
 # Switch to LABDIR root directory or a project subdir, create it if needed
 lab() {
+    emulate -L zsh
+
     local LABDIR=$HOME/Lab
+
     if [[ $ARGC -eq 0 ]]; then
 	mkcd $LABDIR
     elif [[ $ARGC -eq 1 ]]; then
@@ -399,10 +413,15 @@ lab() {
 # Usage: simple-extract <file>
 # Using option -d deletes the original archive file.
 #f5# Smart archive extractor
-simple-extract () {
+simple-extract() {
+    emulate -L zsh
+
     setopt extended_glob noclobber
-    local ARCHIVE DELETE_ORIGINAL DECOMP_CMD USES_STDIN USES_STDOUT GZTARGET WGET_CMD
+
+    local ARCHIVE DELETE_ORIGINAL DECOMP_CMD
+    local USES_STDIN USES_STDOUT GZTARGET WGET_CMD
     local RC=0
+
     zparseopts -D -E "d=DELETE_ORIGINAL"
     for ARCHIVE in "${@}"; do
 	case $ARCHIVE in
