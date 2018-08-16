@@ -1,6 +1,6 @@
 # .zshrc - z shell config file
 #
-# (c) 2015 Michael Berry <trismegustis@gmail.com>
+# (c) 2018 Michael Berry <trismegustis@gmail.com>
 
 # Behave like the z shell
 emulate -L zsh
@@ -88,17 +88,23 @@ else
     EDITOR=vi
 fi
 
+# Custom zsh scripts directory
+ZSH_DIR=~/.zsh
+
+# Set global exports
+export LANG CHARSET PATH PAGER EDITOR ZSH_DIR
+
 # Load zsh options
-if [[ -r ~/.zshopts.zsh ]]; then
-    . ~/.zshopts.zsh
+if [[ -r ~/${ZSH_DIR}/.zshopts.zsh ]]; then
+    . ~/{ZSH_DIR}/.zshopts.zsh
 fi
 
 # Load custom utility functions
-if [[ -r ~/.zshfuncs.zsh ]]; then
-    . ~/.zshopts.zsh
+if [[ -r ~/${ZSH_DIR}/.zshfuncs.zsh ]]; then
+    . ~/${ZSH_DIR}/.zshfuncs.zsh
 fi
 
 # Load aliases
-if [[ -r ~/.aliasrc ]]; then
-    . ~/.aliasrc
+if [[ -r ~/${ZSH_DIR}/.aliases.zsh ]]; then
+    . ~/${ZSH_DIR}/.aliasrc
 fi

@@ -1,6 +1,3 @@
-# Set global exports
-export LANG CHARSET PATH PAGER EDITOR
-
 # Gain access to online help
 autoload -Uz run-help
 HELPDIR=/usr/local/share/zsh/help
@@ -137,6 +134,33 @@ bindkey -M menuselect '^o' accept-and-infer-next-history
 # disable named-directories autocompletion
 zstyle ':completion:*:cd*' tag-order \
        local-directories directory-stack path-directories
+
+
+# Version control info
+autoload -Uz vcs_info
+
+zstyle ':vcs_info:*' enable git hg svn cvs bzr
+zstyle ':vcs_info:*' check-for-changes true
+zstyle ':vcs_info:*' formats "%{$fg[magenta]%}%c%{$fg[green]%}%u\
+%{$fg[magenta]%} [%{$fg[green]%}%b%{$fg[magenta]%}]\
+-%{$fg[yellow]%}%s%{$reset_color%}:%{$fg[cyan]%}%r%{$reset_color%}"
+
+# Prompt configuration
+load_custom_prompt() {
+    setopt PROMPT_SUBST       # needed for vcs_info_msg_0_
+    color="green"
+    if [[ "$USER" == "root" ]]; then
+	color="red"
+    fi
+    PROMPT="%{$fg[$color]%}%n%{$reset_color%}%{$fg[cyan]%} %B%~%b %% "
+    RPROMPT="${vcs_info_msg_0_}"
+}
+
+# Load vcs info before each prompt
+precmd() {
+    vcs_info
+    load_custom_prompt
+}
 
 # Pushd
 setopt auto_pushd             # make cd push old dir in dir stack
