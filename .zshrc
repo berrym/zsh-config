@@ -95,16 +95,16 @@ ZSH_DIR=~/.zsh
 export LANG CHARSET PATH PAGER EDITOR ZSH_DIR
 
 # Load zsh options
-if [[ -r ~/${ZSH_DIR}/.zshopts.zsh ]]; then
-    . ~/${ZSH_DIR}/.zshopts.zsh
+if [[ -r ${ZSH_DIR}/zshopts.zsh ]]; then
+    . ${ZSH_DIR}/zshopts.zsh
 fi
 
 # Load custom utility functions
-if [[ -r ~/${ZSH_DIR}/.zshfuncs.zsh ]]; then
-    . ~/${ZSH_DIR}/.zshfuncs.zsh
+if [[ -r ${ZSH_DIR}/zshfuncs.zsh ]]; then
+    . ${ZSH_DIR}/zshfuncs.zsh
 fi
 
 # Load aliases
-if [[ -r ~/${ZSH_DIR}/.aliases.zsh ]]; then
-    . ~/${ZSH_DIR}/.aliasrc
+if [[ -r ${ZSH_DIR}/aliases.zsh ]]; then
+    . ${ZSH_DIR}/aliases.zsh
 fi
