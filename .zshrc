@@ -96,7 +96,7 @@ export LANG CHARSET PATH PAGER EDITOR ZSH_DIR
 
 # Load zsh options
 if [[ -r ~/${ZSH_DIR}/.zshopts.zsh ]]; then
-    . ~/{ZSH_DIR}/.zshopts.zsh
+    . ~/${ZSH_DIR}/.zshopts.zsh
 fi
 
 # Load custom utility functions

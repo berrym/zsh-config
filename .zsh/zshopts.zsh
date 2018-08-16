@@ -152,7 +152,7 @@ load_custom_prompt() {
     if [[ "$USER" == "root" ]]; then
 	color="red"
     fi
-    PROMPT="%{$fg[$color]%}%n%{$reset_color%}%{$fg[cyan]%} %B%~%b %% "
+    PROMPT="%{$fg[$color]%}%n%{$fg[cyan]%} %B%~%b%{$reset_color%} %% "
     RPROMPT="${vcs_info_msg_0_}"
 }
 
