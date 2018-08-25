@@ -91,6 +91,8 @@ fi
 # Custom zsh scripts directory
 ZSH_DIR=~/.zsh
 
+fpath=($ZSH_DIR $fpath)
+
 # Set global exports
 export LANG CHARSET PATH PAGER EDITOR ZSH_DIR
 

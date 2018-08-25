@@ -25,8 +25,8 @@ bindkey '\ew' kill-region     # esc+w kill from cursor to mark
 bindkey -s '\el' 'ls\n'       # esc+l execute ls command
 
 # Configure completions
-autoload -Uz compaudit compinit && compaudit && compinit
 zmodload -i zsh/complist
+autoload -Uz compaudit compinit && compaudit && compinit
 
 setopt hash_list_all          # hash everything before completion
 setopt auto_menu              # use menu completion
@@ -58,6 +58,7 @@ zstyle ':completion:*:kill:*' menu yes select
 zstyle ':completion:*:kill:*' force-list always
 zstyle ':completion:*:*:kill:*:processes' list-colors \
        '=(#b) #([0-9]#) ([0-9a-z-]#)*=01;34=0=01'
+
 zstyle ':completion:*:killall:*' force-list always
 zstyle ':completion:*:default' list_prompt
 
@@ -65,7 +66,7 @@ zstyle ':completion:*:default' list_prompt
 zstyle ':completion:*:processes-names' list-colors \
        command 'ps c -u ${USER} -o command | uniq'
 
-# format completions
+# format descriptions
 zstyle ':completion:descriptions' format $'\e[00;34,%d'
 
 # provide verbose completion information
@@ -135,7 +136,6 @@ bindkey -M menuselect '^o' accept-and-infer-next-history
 zstyle ':completion:*:cd*' tag-order \
        local-directories directory-stack path-directories
 
-
 # Version control info
 autoload -Uz vcs_info
 
@@ -148,11 +148,7 @@ zstyle ':vcs_info:*' formats "%{$fg[magenta]%}%c%{$fg[green]%}%u\
 # Prompt configuration
 load_custom_prompt() {
     setopt PROMPT_SUBST       # needed for vcs_info_msg_0_
-    color="green"
-    if [[ "$USER" == "root" ]]; then
-	color="red"
-    fi
-    PROMPT="%{$fg[$color]%}%n%{$fg[cyan]%} %B%~%b%{$reset_color%} %% "
+    PROMPT="%(?.%{$fg[green]%}.%{$fg[red]%})%n%{$fg[cyan]%} %B%~%b%{$reset_color%} %% "
     RPROMPT="${vcs_info_msg_0_}"
 }
 
@@ -163,7 +159,7 @@ precmd() {
 }
 
 # Pushd
-setopt auto_pushd             # make cd push old dir in dir stack
+setopt auto_pushd             # make cd push old dir on dir stack
 setopt pushd_ignore_dups      # no duplicates in dir stack
 setopt pushd_silent           # no dir stack after pushd or popd
 setopt pushd_to_home          # `pushd` = `pushd $HOME`
