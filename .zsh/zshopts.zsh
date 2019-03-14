@@ -1,3 +1,5 @@
+emulate -L zsh
+
 # Gain access to online help
 autoload -Uz run-help
 HELPDIR=/usr/local/share/zsh/help
