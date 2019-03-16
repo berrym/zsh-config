@@ -150,7 +150,10 @@ zstyle ':vcs_info:*' formats "%{$fg[magenta]%}%c%{$fg[green]%}%u\
 # Prompt configuration
 load_custom_prompt() {
     setopt PROMPT_SUBST       # needed for vcs_info_msg_0_
-    PROMPT="%(?.%{$fg[green]%}.%{$fg[red]%})%n%{$fg[cyan]%} %B%~%b%{$reset_color%} %% "
+    # prompt with name
+    #PROMPT="%(?.%{$fg[green]%}.%{$fg[red]%})%n%{$fg[cyan]%} %B%~%b%{$reset_color%} %% "
+    # prompt without name
+    PROMPT="%(?.%{$fg[cyan]%}.%{$fg[red]%})%B%~%b%{$reset_color%} %% "
     RPROMPT="${vcs_info_msg_0_}"
 }
 
