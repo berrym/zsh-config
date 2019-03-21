@@ -53,10 +53,7 @@ OSNAME=$(uname -s)        # Determine OS
 if isLinux; then
     ;
 elif isDarwin; then
-    path=($path /usr/x11/bin)
-    # HomeBrew GitHub Key
-    export HOMEBREW_GITHUB_API_TOKEN=60f48f8a8684dcd786edd0011cb61b39fd7aacb6
-    export HOMEBREW_CC=clang
+    ;
 elif isFreeBSD; then
     path=($path /usr/X11R6/bin)
     hash -d ports=/usr/ports
@@ -88,6 +85,13 @@ else
     EDITOR=vi
 fi
 
+# Run tmux on startup
+#command -v tmux &>/dev/null
+if [[ -z "$TMUX" ]]; then
+    tmux ls && read tmux_session && tmux attach -t ${tmux_session:-default} \
+        || tmux new -s ${tmux_session:-default}
+fi
+ 
 # Custom zsh scripts directory
 ZSH_DIR=~/.zsh
 
