@@ -1,5 +1,3 @@
-emulate -L zsh
-
 # Darwin aliases
 alias ...='cd ../../'
 alias da='du -sch'

@@ -1,8 +1,8 @@
 # .zshrc - z shell config file
 #
-# (c) 2018 Michael Berry <trismegustis@gmail.com>
+# (c) 2019 Michael Berry <trismegustis@gmail.com>
 
-# Behave like the z shell
+# Behave like the z shell/load default options
 emulate -L zsh
 
 # Determine OS
@@ -53,10 +53,7 @@ OSNAME=$(uname -s)        # Determine OS
 if isLinux; then
     ;
 elif isDarwin; then
-    path=($path /usr/x11/bin)
-    # HomeBrew GitHub Key
-    export HOMEBREW_GITHUB_API_TOKEN=60f48f8a8684dcd786edd0011cb61b39fd7aacb6
-    export HOMEBREW_CC=clang
+    ;
 elif isFreeBSD; then
     path=($path /usr/X11R6/bin)
     hash -d ports=/usr/ports
@@ -87,26 +84,26 @@ if [[ $? -eq 0 ]]; then
 else
     EDITOR=vi
 fi
-
+    
 # Custom zsh scripts directory
 ZSH_DIR=~/.zsh
-
-fpath=($ZSH_DIR $fpath)
 
 # Set global exports
 export LANG CHARSET PATH PAGER EDITOR ZSH_DIR
 
-# Load zsh options
-if [[ -r ${ZSH_DIR}/zshopts.zsh ]]; then
-    . ${ZSH_DIR}/zshopts.zsh
-fi
+# Load custom scripts
+zsh_scripts=(
+    ${ZSH_DIR}/zshopts.zsh  # zsh options
+    ${ZSH_DIR}/zshfuncs.zsh # utility functions
+    ${ZSH_DIR}/aliases.zsh  # aliases
+)
 
-# Load custom utility functions
-if [[ -r ${ZSH_DIR}/zshfuncs.zsh ]]; then
-    . ${ZSH_DIR}/zshfuncs.zsh
-fi
+for f in $zsh_scripts; do
+    . $f
+done
 
-# Load aliases
-if [[ -r ${ZSH_DIR}/aliases.zsh ]]; then
-    . ${ZSH_DIR}/aliases.zsh
+# Run tmux on startup
+if [[ -z "$TMUX" ]]; then
+    tmux ls && read tmux_session && tmux attach -t ${tmux_session:-default} \
+        || tmux new -s ${tmux_session:-default}
 fi

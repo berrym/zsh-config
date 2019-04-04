@@ -1,5 +1,3 @@
-emulate -L zsh
-
 # FreeBSD aliases
 alias ...='cd ../../'
 alias da='du -sch'

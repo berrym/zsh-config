@@ -1,5 +1,3 @@
-emulate -L zsh
-
 # OpenBSD aliases
 alias ...='cd ../../'
 alias da='du -sch'

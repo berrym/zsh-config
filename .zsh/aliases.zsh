@@ -1,12 +1,5 @@
 # Load aliases based on OS
-
-emulate -L zsh
-
 ALIAS_DIR="${ZSH_DIR}/aliases"
-
-fpath=($ALIAS_DIR $fpath)
-
-#export ALIAS_DIR
 
 # GNU/Linux
 if isLinux; then

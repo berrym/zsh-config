@@ -1,5 +1,3 @@
-emulate -L zsh
-
 # NetBSD aliases
 alias ...='cd ../../'
 alias da='du -sch'

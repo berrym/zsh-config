@@ -1,5 +1,3 @@
-emulate -L zsh
-
 # Print more information to user if positive
 VERBOSE=1
 verbose() {

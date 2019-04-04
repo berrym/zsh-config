@@ -1,5 +1,3 @@
-emulate -L zsh
-
 # GNU/Linux aliases
 alias ...='cd ../../'
 alias code='command flatpak run com.visualstudio.code'

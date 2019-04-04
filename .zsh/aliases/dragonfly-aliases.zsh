@@ -1,5 +1,3 @@
-emulate -L zsh
-
 # DragonFly aliases
 unset zle_bracketed_paste
 alias ...='cd ../../'
