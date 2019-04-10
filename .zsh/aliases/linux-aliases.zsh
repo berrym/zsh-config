@@ -1,6 +1,5 @@
 # GNU/Linux aliases
 alias ...='cd ../../'
-alias code='command flatpak run com.visualstudio.code'
 alias da='du -sch'
 alias dir='command ls -lSrah'
 alias egrep='egrep --color=auto'

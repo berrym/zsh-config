@@ -44,6 +44,7 @@ path=(/usr/local/bin
       /usr/sbin
       /bin
       /sbin
+      ~/.local/bin
       ~/bin
       $path)
 LANG=en_US.UTF-8
@@ -101,6 +102,12 @@ zsh_scripts=(
 for f in $zsh_scripts; do
     . $f
 done
+
+# Run the powerline daemon
+command -v powerline-daemon &>/dev/null
+if [[ $? -eq 0 ]]; then
+    powerline-daemon &>/dev/null
+fi
 
 # Run tmux on startup
 if [[ -z "$TMUX" ]]; then
