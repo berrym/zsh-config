@@ -96,6 +96,19 @@ mkcd() {
     cd $1
 }
 
+# Completion for lab function
+_lab() {
+    local LABDIR=$HOME/Lab
+    cd $LABDIR
+    local SUBDIRS=(`ls -d */`)
+    for d in $SUBDIRS; do
+	compadd $d
+    done
+    popd
+}
+
+compdef _lab lab
+
 # Switch to LABDIR root directory or a project subdir, create it if needed
 lab() {
     emulate -L zsh
