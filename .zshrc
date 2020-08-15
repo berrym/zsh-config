@@ -1,6 +1,6 @@
 # .zshrc - z shell config file
 #
-# (c) 2019 Michael Berry <trismegustis@gmail.com>
+# (c) 2020 Michael Berry <trismegustis@gmail.com>
 
 # Behave like the z shell/load default options
 emulate -L zsh
@@ -85,18 +85,19 @@ if [[ $? -eq 0 ]]; then
 else
     EDITOR=vi
 fi
-    
-# Custom zsh scripts directory
-ZSH_DIR=~/.zsh
 
 # Set global exports
-export LANG CHARSET PATH PAGER EDITOR ZSH_DIR
+export LANG CHARSET PATH PAGER EDITOR
+
+HISTFILE=${ZDOTDIR:-$HOME}/.zsh_history
+
+ZSHDIR=${ZDOTDIR:-$HOME}/.zsh
 
 # Load custom scripts
 zsh_scripts=(
-    ${ZSH_DIR}/zshopts.zsh  # zsh options
-    ${ZSH_DIR}/zshfuncs.zsh # utility functions
-    ${ZSH_DIR}/aliases.zsh  # aliases
+    ${ZDOTDIR:-$ZSHDIR}/zshopts.zsh  # zsh options
+    ${ZDOTDIR:-$ZSHDIR}/zshfuncs.zsh # utility functions
+    ${ZDOTDIR:-$ZSHDIR}/aliases.zsh  # aliases
 )
 
 for f in $zsh_scripts; do
@@ -109,8 +110,8 @@ if [[ $? -eq 0 ]]; then
     powerline-daemon &>/dev/null
 fi
 
-# Run tmux on startup
-if [[ -z "$TMUX" ]]; then
-    tmux ls && read tmux_session && tmux attach -t ${tmux_session:-default} \
-        || tmux new -s ${tmux_session:-default}
-fi
+PROMPTDIR=${ZDOTDIR:-$ZSHDIR}/prompts
+
+# Load custom prompt
+PROMPT_THEME=${ZDOTDIR:-$PROMPTDIR}/berrym-arrows.zsh
+source $PROMPT_THEME

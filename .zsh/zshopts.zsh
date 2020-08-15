@@ -136,31 +136,6 @@ bindkey -M menuselect '^o' accept-and-infer-next-history
 zstyle ':completion:*:cd*' tag-order \
        local-directories directory-stack path-directories
 
-# Version control info
-autoload -Uz vcs_info
-
-zstyle ':vcs_info:*' enable git hg svn cvs bzr
-zstyle ':vcs_info:*' check-for-changes true
-zstyle ':vcs_info:*' formats "%{$fg[magenta]%}%c%{$fg[green]%}%u\
-%{$fg[magenta]%} [%{$fg[green]%}%b%{$fg[magenta]%}]\
--%{$fg[yellow]%}%s%{$reset_color%}:%{$fg[cyan]%}%r%{$reset_color%}"
-
-# Prompt configuration
-load_custom_prompt() {
-    setopt PROMPT_SUBST       # needed for vcs_info_msg_0_
-    # prompt with name
-    #PROMPT="%(?.%{$fg[green]%}.%{$fg[red]%})%n%{$fg[cyan]%} %B%~%b%{$reset_color%} %% "
-    # prompt without name
-    PROMPT="%(?.%{$fg[cyan]%}.%{$fg[red]%})%B%~%b%{$reset_color%} %% "
-    RPROMPT="${vcs_info_msg_0_}"
-}
-
-# Load vcs info before each prompt
-precmd() {
-    vcs_info
-    load_custom_prompt
-}
-
 # Pushd
 setopt auto_pushd             # make cd push old dir on dir stack
 setopt pushd_ignore_dups      # no duplicates in dir stack
