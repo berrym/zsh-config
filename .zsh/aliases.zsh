@@ -1,44 +1,44 @@
 # Load aliases based on OS
-ALIAS_DIR="${ZSH_DIR}/aliases"
+ALIASDIR=${ZDOTDIR:-$ZSHDIR}/aliases
 
 # GNU/Linux
 if isLinux; then
-    if [[ -r ${ALIAS_DIR}/linux-aliases.zsh ]]; then
-       . ${ALIAS_DIR}/linux-aliases.zsh
+    if [[ -r ${ALIASDIR}/linux-aliases.zsh ]]; then
+       . ${ALIASDIR}/linux-aliases.zsh
     fi
 fi
 
 # Mac
 if isDarwin; then
-    if [[ -r ${ALIAS_DIR}/darwin-aliases.zsh ]]; then
-	. ${ALIAS_DIR}/darwin-aliases.zsh
+    if [[ -r ${ALIASDIR}/darwin-aliases.zsh ]]; then
+	. ${ALIASDIR}/darwin-aliases.zsh
     fi
 fi
 
 # FreeBSD
 if isFreeBSD; then
-    if [[ -r ${ALIAS_DIR}/freebsd-aliases.zsh ]]; then
-	. ${ALIAS_DIR}/freebsd-aliases.zsh
+    if [[ -r ${ALIASDIR}/freebsd-aliases.zsh ]]; then
+	. ${ALIASDIR}/freebsd-aliases.zsh
     fi
 fi
 
 # OpenBSD
 if isOpenBSD; then
-    if [[ -r ${ALIAS_DIR}/openbsd-aliases.zsh ]]; then
-	. ${ALIAS_DIR}/openbsd-aliases.zsh
+    if [[ -r ${ALIASDIR}/openbsd-aliases.zsh ]]; then
+	. ${ALIASDIR}/openbsd-aliases.zsh
     fi
 fi
 
 # NetBSD
 if isNetBSD; then
-    if [[ -r ${ALIAS_DIR}/netbsd-aliases.zsh ]]; then
-	. ${ALIAS_DIR}/netbsd-aliases.zsh
+    if [[ -r ${ALIASDIR}/netbsd-aliases.zsh ]]; then
+	. ${ALIASDIR}/netbsd-aliases.zsh
     fi
 fi
 
 # DragonFly
 if isDragonFly; then
-    if [[ -r ${ALIAS_DIR}/dragonfly-aliases.zsh ]]; then
-	. ${ALIAS_DIR}/dragonfly-aliases.zsh
+    if [[ -r ${ALIASDIR}/dragonfly-aliases.zsh ]]; then
+	. ${ALIASDIR}/dragonfly-aliases.zsh
     fi
 fi
