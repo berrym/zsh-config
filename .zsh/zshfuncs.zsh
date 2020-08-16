@@ -126,14 +126,13 @@ lab() {
 
 # Usage: simple-extract <file>
 # Using option -d deletes the original archive file.
-#f5# Smart archive extractor
 simple-extract() {
     emulate -L zsh
 
     setopt extended_glob noclobber
 
-    local ARCHIVE DELETE_ORIGINAL DECOMP_CMD
-    local USES_STDIN USES_STDOUT GZTARGET WGET_CMD
+    local ARCHIVE DELETE_ORIGINAL DECOMP_CMD PIPE_CMD
+    local USES_STDIN USES_STDOUT USES_PIPE GZTARGET WGET_CMD
     local RC=0
 
     zparseopts -D -E "d=DELETE_ORIGINAL"
@@ -179,6 +178,13 @@ simple-extract() {
 		USES_STDIN=false
 		USES_STDOUT=false
 		;;
+	    *rpm)
+		DECOMP_CMD="rpm2cpio -"
+		PIPE_CMD="cpio -idvm"
+		USES_STDIN=true
+		USES_STDOUT=true
+		USES_PIPE=true
+		;;
 	    *deb)
 		DECOMP_CMD="ar -x"
 		USES_STDIN=false
@@ -218,7 +224,11 @@ simple-extract() {
 	    print "Extracting '$ARCHIVE' ..."
 	    if $USES_STDIN; then
 		if $USES_STDOUT; then
-		    ${=DECOMP_CMD} < "$ARCHIVE" > $GZTARGET
+		    if $USES_PIPE; then
+			${=DECOMP_CMD} < "$ARCHIVE" | ${=PIPE_CMD} > $GZTARGET
+		    else
+			${=DECOMP_CMD} < "$ARCHIVE" > $GZTARGET
+		    fi
 		else
 		    ${=DECOMP_CMD} < "$ARCHIVE"
 		fi

@@ -142,14 +142,6 @@ setopt pushd_ignore_dups      # no duplicates in dir stack
 setopt pushd_silent           # no dir stack after pushd or popd
 setopt pushd_to_home          # `pushd` = `pushd $HOME`
 
-# Configure history
-if [[ -z $HISTFILE ]]; then
-    HISTFILE=$HOME/.zsh_history
-fi
-
-HISTSIZE=100
-SAVEHIST=100
-
 setopt append_history         # append history
 setopt hist_ignore_dups       # ignore duplicates
 setopt hist_ignore_space      # ignore space prefixed commands
@@ -162,7 +154,7 @@ setopt bang_hist              # ! syntax to access history
 # Misc options
 setopt autocd                 # if command is a path, cd into it
 setopt auto_remove_slash      # self explicit
-setopt correct_all            # try to correct spelling of commands
+setopt correct                # try to correct spelling of commands
 setopt extended_glob          # activate complex pattern globbing
 setopt noclobber              # don't overwrite file, use >! to do so
 setopt longlistjobs           # display pid when suspending
