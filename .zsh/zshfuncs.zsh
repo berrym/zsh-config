@@ -133,7 +133,6 @@ simple-extract() {
 
     local ARCHIVE DELETE_ORIGINAL DECOMP_CMD PIPE_CMD
     local USES_STDIN USES_STDOUT USES_PIPE GZTARGET WGET_CMD
-    local RC=0
 
     zparseopts -D -E "d=DELETE_ORIGINAL"
     for ARCHIVE in "${@}"; do
@@ -207,14 +206,13 @@ simple-extract() {
 		;;
 	    *)
 		print "ERROR: '$ARCHIVE' has unrecognized archive type." >&2
-		RC=$((RC+1))
+		#RC=$((RC+1))
 		continue
 		;;
 	esac
 
 	if ! check_com ${DECOMP_CMD[(w)1]}; then
 	    echo "ERROR: ${DECOMP_CMD[(w)1]} not installed." >&2
-	    RC=$((RC+2))
 	    continue
 	fi
 
@@ -234,7 +232,11 @@ simple-extract() {
 		fi
 	    else
 		if $USES_STDOUT; then
-		    ${=DECOMP_CMD} "$ARCHIVE" > $GZTARGET
+		    if $USES_PIPE; then
+			${=DECOMP_CMD} < "$ARCHIVE" | ${=PIPE_CMD} > $GZTARGET
+		    else
+			${=DECOMP_CMD} < "$ARCHIVE" > $GZTARGET
+		    fi
 		else
 		    ${=DECOMP_CMD} "$ARCHIVE"
 		fi
@@ -250,17 +252,14 @@ simple-extract() {
 		WGET_CMD="fetch -q -o -"
 	    else
 		print "ERROR: neither wget, curl nor fetch is installed" >&2
-		RC=$((RC+4))
 		continue
 	    fi
 	    print "Downloading and Extracting '$ARCHIVE' ..."
 	    if $USES_STDIN; then
 		if $USES_STDOUT; then
 		    ${=WGET_CMD} "$ARCHIVE" | ${=DECOMP_CMD} > $GZTARGET
-		    RC=$((RC+$?))
 		else
 		    ${=WGET_CMD} "$ARCHIVE" | ${=DECOMP_CMD}
-		    RC=$((RC+$?))
 		fi
 	    else
 		if $USES_STDOUT; then
@@ -272,7 +271,6 @@ simple-extract() {
 
 	else
 	    print "ERROR: '$ARCHIVE' is neither a valid file nor a supported URI." >&2
-	    RC=$((RC+8))
 	fi
     done
     return $RC
