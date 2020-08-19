@@ -1,7 +1,11 @@
-source $PROMPTDIR/prompt-funcs.zsh
-
 # Version control info
 autoload -Uz vcs_info compinit && compinit
+
+zstyle ':vcs_info:*' enable git hg svn cvs bzr
+zstyle ':vcs_info:*' check-for-changes true
+zstyle ':vcs_info:*' formats "%{$fg[magenta]%}%c%{$fg[green]%}%u\
+%{$fg[magenta]%} [%{$fg[green]%}%b%{$fg[magenta]%}]\
+-%{$fg[yellow]%}%s%{$reset_color%}:%{$fg[cyan]%}%r%{$reset_color%}"
 
 # Prompt configuration
 load_custom_prompt() {
@@ -15,10 +19,10 @@ load_custom_prompt() {
 	prompt_host=%{$fg_bold[white]%}@%{$reset_color$fg[yellow]%}$(hostname -s)
     fi
 
-    if [ ${vcs_info_msg_0_} ]; then
-	RPROMPT="$(username magenta)${prompt_host} ${vcs_info_msg_0_}"
+    if [[ ${vcs_info_msg_0_} ]]; then
+	RPROMPT="$(username magenta)${prompt_host} ${vcs_info_msg_0_}%{$reset_color%}"
     else
-	RPROMPT="$(username magenta)${prompt_host} $(current_time)"
+	RPROMPT="$(username magenta)${prompt_host} $(current_time)%{$reset_color%}"
     fi
 }
 

@@ -273,5 +273,4 @@ simple-extract() {
 	    print "ERROR: '$ARCHIVE' is neither a valid file nor a supported URI." >&2
 	fi
     done
-    return $RC
 }
