@@ -4,9 +4,3 @@ load_custom_prompt() {
     PROMPT="%(?.%{$fg[cyan]%}.%{$fg[red]%})%B$(directory)%b%{$reset_color%} %% "
     RPROMPT=$(vcs_info_wrapper)
 }
-
-# Load vcs info before each prompt
-precmd() {
-    vcs_info
-    load_custom_prompt
-}

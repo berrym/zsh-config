@@ -25,7 +25,17 @@ current_time() {
 
 # returns 👾 and return code if there are errors, nothing otherwise
 return_status() {
-    echo "%(?..👾 %?)"
+    use_emoji=$1
+    emoji=$2
+    if [[ $use_emoji ]]; then
+	if [[ -z $emoji ]]; then
+	    echo "%(?..👾 %?)"
+	else
+	    echo "%(?..$emoji %?)"
+	fi
+    else
+	echo "%?"
+    fi
 }
 
 # determine remote ssh host
@@ -45,4 +55,10 @@ vcs_info_wrapper() {
     else
 	echo "$(username magenta)${remote} $(current_time)%{$reset_color%}"
     fi
+}
+
+# Load vcs info before each prompt
+precmd() {
+    vcs_info
+    load_custom_prompt
 }

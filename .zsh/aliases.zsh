@@ -1,6 +1,3 @@
-# Load aliases based on OS
-ALIASDIR=${ZDOTDIR:-$ZSHDIR}/aliases
-
 # GNU/Linux
 if isLinux; then
     if [[ -r ${ALIASDIR}/linux-aliases.zsh ]]; then

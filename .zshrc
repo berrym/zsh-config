@@ -30,8 +30,9 @@ HISTSIZE=100
 SAVEHIST=100
 
 ZSHDIR=${ZDOTDIR:-$HOME}/.zsh
-ZSH_THIRD_PARTY_DIR=${ZDOTDIR:-$ZSHDIR}/third-party
+ALIASDIR=${ZDOTDIR:-$ZSHDIR}/aliases
 PROMPTDIR=${ZDOTDIR:-$ZSHDIR}/prompts
+ZSH_THIRD_PARTY_DIR=${ZDOTDIR:-$ZSHDIR}/third-party
 
 # Load custom scripts
 zsh_scripts=(
