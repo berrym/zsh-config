@@ -1,3 +1,7 @@
+# zshopts - z shell options
+#
+# (c) 2020 Michael Berry <trismegustis@gmail.com>
+
 # Gain access to online help
 autoload -Uz run-help
 HELPDIR=/usr/local/share/zsh/help

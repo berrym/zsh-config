@@ -2,38 +2,6 @@
 #
 # (c) 2020 Michael Berry <trismegustis@gmail.com>
 
-# Behave like the z shell/load default options
-emulate -L zsh
-
-# Set pager
-command -v less &>/dev/null
-if [[ $? -eq 0 ]]; then
-    PAGER=less
-else
-    PAGER=more
-fi
-
-# Check for the mg editor, else default to vi
-command -v mg &>/dev/null
-if [[ $? -eq 0 ]]; then
-    EDITOR=mg
-else
-    EDITOR=vi
-fi
-
-# Set global exports
-export LANG CHARSET PATH PAGER EDITOR
-
-HISTFILE=${ZDOTDIR:-$HOME}/.zsh_history
-
-HISTSIZE=100
-SAVEHIST=100
-
-ZSHDIR=${ZDOTDIR:-$HOME}/.zsh
-ALIASDIR=${ZDOTDIR:-$ZSHDIR}/aliases
-PROMPTDIR=${ZDOTDIR:-$ZSHDIR}/prompts
-ZSH_THIRD_PARTY_DIR=${ZDOTDIR:-$ZSHDIR}/third-party
-
 # Load custom scripts
 zsh_scripts=(
     ${ZDOTDIR:-$ZSHDIR}/zshopts.zsh  # zsh options

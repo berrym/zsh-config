@@ -1,3 +1,7 @@
+# zshfuncs.zsh - z shell miscellaneous functions
+#
+# (c) 2020 Michael Berry <trismegustis@gmail.com>
+
 # Print more information to user if positive
 VERBOSE=1
 verbose() {
@@ -50,7 +54,7 @@ check_com () {
     return 1
 }
 
-# Switch to a directoy the list it's contents
+# Switch to a directoy and then list it's contents
 cl() {
     emulate -L zsh
 
