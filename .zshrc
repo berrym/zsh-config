@@ -19,6 +19,12 @@ for f in $zsh_scripts; do
     fi
 done
 
+# Run the powerline daemon
+command -v powerline-daemon &>/dev/null
+if [[ $? -eq 0 ]]; then
+    powerline-daemon &>/dev/null
+fi
+
 # Load custom prompt
 PROMPT_THEME=${ZDOTDIR:-$PROMPTDIR}/berrym-default.zsh
 if [[ -r $PROMPT_THEME ]]; then
