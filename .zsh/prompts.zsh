@@ -13,9 +13,14 @@ username() {
     echo "%{$fg[$color]%}%n%{$reset_color%}"
 }
 
-# current directory, two levels deep
+# current directory, optionally $level deep
 directory() {
-    echo "%2~"
+    level=$1
+    if [[ $level ]]; then
+	echo "%$level~"
+    else
+	echo "%~"
+    fi
 }
 
 # current time with milliseconds
@@ -23,7 +28,7 @@ current_time() {
     echo "%*"
 }
 
-# returns 👾 and return code if there are errors, nothing otherwise
+# returns 👾 or another emoji and return code if there are errors, nothing otherwise
 return_status() {
     use_emoji=$1
     emoji=$2
@@ -46,6 +51,7 @@ remote_host() {
 	echo "%{$fg_bold[white]%}@%{$reset_color$fg[yellow]%}$(hostname -s)"
     fi
 }
+
 
 vcs_info_wrapper() {
     remote=$(remote_host)

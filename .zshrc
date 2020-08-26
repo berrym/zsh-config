@@ -4,11 +4,11 @@
 
 # Load custom scripts
 zsh_scripts=(
-    ${ZDOTDIR:-$ZSHDIR}/zshopts.zsh  # zsh options
-    ${ZDOTDIR:-$ZSHDIR}/zshfuncs.zsh # utility functions
-    ${ZDOTDIR:-$ZSHDIR}/aliases.zsh  # aliases
-    ${ZDOTDIR:-$ZSHDIR}/prompts.zsh  # prompt functions
-    ${ZDOTDIR:-$ZSHDIR}/third-party.zsh # third party functions
+    $ZSHDIR/zshopts.zsh  # zsh options
+    $ZSHDIR/zshfuncs.zsh # utility functions
+    $ZSHDIR/aliases.zsh  # aliases
+    $ZSHDIR/prompts.zsh  # prompt functions
+    $ZSHDIR/third-party.zsh # third party functions
 )
 
 for f in $zsh_scripts; do
@@ -26,7 +26,7 @@ if [[ $? -eq 0 ]]; then
 fi
 
 # Load custom prompt
-PROMPT_THEME=${ZDOTDIR:-$PROMPTDIR}/berrym-default.zsh
+PROMPT_THEME=$PROMPTDIR/berrym-default.zsh
 if [[ -r $PROMPT_THEME ]]; then
     . $PROMPT_THEME
 else

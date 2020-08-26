@@ -258,7 +258,9 @@ simple-extract() {
 		print "ERROR: neither wget, curl nor fetch is installed" >&2
 		continue
 	    fi
+
 	    print "Downloading and Extracting '$ARCHIVE' ..."
+
 	    if $USES_STDIN; then
 		if $USES_STDOUT; then
 		    ${=WGET_CMD} "$ARCHIVE" | ${=DECOMP_CMD} > $GZTARGET
@@ -272,7 +274,6 @@ simple-extract() {
 		    ${=DECOMP_CMD} =(${=WGET_CMD} "$ARCHIVE")
 		fi
 	    fi
-
 	else
 	    print "ERROR: '$ARCHIVE' is neither a valid file nor a supported URI." >&2
 	fi

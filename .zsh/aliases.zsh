@@ -1,41 +1,24 @@
-# GNU/Linux
-if isLinux; then
-    if [[ -r ${ALIASDIR}/linux-aliases.zsh ]]; then
-       . ${ALIASDIR}/linux-aliases.zsh
-    fi
-fi
+# aliases.zsh - Load aliases based on OS detection
+#
+# (c) 2020 Michael Berry <trismegustis@gmail.com>
 
-# Mac
-if isDarwin; then
-    if [[ -r ${ALIASDIR}/darwin-aliases.zsh ]]; then
-	. ${ALIASDIR}/darwin-aliases.zsh
-    fi
-fi
+declare -A funcs
+funcs=(
+    $(isLinux) ${ALIASDIR}/linux-aliases.zsh
+    $(isDarwin) ${ALIASDIR}/darwin-aliases.zsh
+    $(isFreeBSD) ${ALIASDIR}/freebsd-aliases.zsh
+    $(isOpenBSD) ${ALIASDIR}/openbsd-aliases.zsh
+    $(isNetBSD) ${ALIASDIR}/netbsd-aliases.zsh
+    $(isDragonFly) ${ALIASDIR}/dragonfly-aliases.zsh
+)
 
-# FreeBSD
-if isFreeBSD; then
-    if [[ -r ${ALIASDIR}/freebsd-aliases.zsh ]]; then
-	. ${ALIASDIR}/freebsd-aliases.zsh
+for func script in ${(kv)funcs}; do
+    if [[ $func ]]; then
+	if [[ -r $script ]]; then
+	    . $script
+	else
+	    print "Unable to source $script"
+	fi
+	break
     fi
-fi
-
-# OpenBSD
-if isOpenBSD; then
-    if [[ -r ${ALIASDIR}/openbsd-aliases.zsh ]]; then
-	. ${ALIASDIR}/openbsd-aliases.zsh
-    fi
-fi
-
-# NetBSD
-if isNetBSD; then
-    if [[ -r ${ALIASDIR}/netbsd-aliases.zsh ]]; then
-	. ${ALIASDIR}/netbsd-aliases.zsh
-    fi
-fi
-
-# DragonFly
-if isDragonFly; then
-    if [[ -r ${ALIASDIR}/dragonfly-aliases.zsh ]]; then
-	. ${ALIASDIR}/dragonfly-aliases.zsh
-    fi
-fi
+done
