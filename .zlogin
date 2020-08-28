@@ -1,5 +1,5 @@
 # Load tmux
-if [[ -z "$SSH_CLIENT" ]]; then
+if [[ "$SSH_CLIENT" ]]; then
     if command -v tmux &>/dev/null && [[ -z "$TMUX" ]]; then
 	tmux attach -t default || tmux new -s default
     fi
