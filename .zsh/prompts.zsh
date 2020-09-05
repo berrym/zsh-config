@@ -17,9 +17,9 @@ username() {
 directory() {
     level=$1
     if [[ $level ]]; then
-	echo "%$level~"
+        echo "%$level~"
     else
-	echo "%~"
+        echo "%~"
     fi
 }
 
@@ -33,22 +33,22 @@ return_status() {
     use_emoji=$1
     emoji=$2
     if [[ $use_emoji ]]; then
-	if [[ -z $emoji ]]; then
-	    echo "%(?..👾 %?)"
-	else
-	    echo "%(?..$emoji %?)"
-	fi
+        if [[ -z $emoji ]]; then
+            echo "%(?..👾 %?)"
+        else
+            echo "%(?..$emoji %?)"
+        fi
     else
-	echo "%?"
+        echo "%?"
     fi
 }
 
 # determine remote ssh host
 remote_host() {
     if [[ -z "$SSH_CLIENT" ]]; then
-	echo ""
+        echo ""
     else
-	echo "%{$fg_bold[white]%}@%{$reset_color$fg[yellow]%}$(hostname -s)"
+        echo "%{$fg_bold[white]%}@%{$reset_color$fg[yellow]%}$(hostname -s)"
     fi
 }
 
@@ -57,9 +57,9 @@ vcs_info_wrapper() {
     remote=$(remote_host)
 
     if [[ ${vcs_info_msg_0_} ]]; then
-	echo "$(username magenta)${remote} ${vcs_info_msg_0_} $(current_time)%{$reset_color%}"
+        echo "$(username magenta)${remote} ${vcs_info_msg_0_} $(current_time)%{$reset_color%}"
     else
-	echo "$(username magenta)${remote} $(current_time)%{$reset_color%}"
+        echo "$(username magenta)${remote} $(current_time)%{$reset_color%}"
     fi
 }
 

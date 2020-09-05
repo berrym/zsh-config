@@ -13,11 +13,17 @@ zsh_scripts=(
 
 for f in $zsh_scripts; do
     if [[ -r $f ]]; then
-	. $f
+        . $f
     else
-	print "Unable to load $f"
+        print "Unable to load $f"
     fi
 done
+
+# Display bovine wisdom
+command -v cowsay &>/dev/null && command -v fortune &>/dev/null
+if [[ $? -eq 0 ]]; then
+    cowsay -f stegosaurus `fortune`
+fi
 
 # Run the powerline daemon
 command -v powerline-daemon &>/dev/null
