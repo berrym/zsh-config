@@ -215,7 +215,7 @@ simple-extract() {
         esac
         
         if ! check_com ${DECOMP_CMD[(w)1]}; then
-            echo "ERROR: ${DECOMP_CMD[(w)1]} not installed." >&2
+            print "ERROR: ${DECOMP_CMD[(w)1]} not installed." >&2
             continue
         fi
 

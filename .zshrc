@@ -32,7 +32,7 @@ if [[ $? -eq 0 ]]; then
 fi
 
 # Load custom prompt
-PROMPT_THEME=$PROMPTDIR/berrym-default.zsh
+PROMPT_THEME=$PROMPTDIR/berrym-arrows.zsh
 if [[ -r $PROMPT_THEME ]]; then
     . $PROMPT_THEME
 else
