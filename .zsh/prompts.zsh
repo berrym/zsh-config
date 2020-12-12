@@ -10,22 +10,22 @@ zstyle ':vcs_info:*' formats "%{$fg[magenta]%}(%{$fg[green]%}%s%{$fg[magenta]%})
 # color username
 username() {
     color=$1
-    print "%{$fg[$color]%}%n%{$reset_color%}"
+    print - "%{$fg[$color]%}%n%{$reset_color%}"
 }
 
 # current directory, optionally $level deep
 directory() {
     level=$1
     if [[ $level ]]; then
-        print "%$level~"
+        print - "%$level~"
     else
-        print "%~"
+        print - "%~"
     fi
 }
 
 # current time with milliseconds
 current_time() {
-    print "%*"
+    print - "%*"
 }
 
 # returns 👾 or another emoji and return code if there are errors, nothing otherwise
@@ -34,21 +34,21 @@ return_status() {
     emoji=$2
     if [[ $use_emoji ]]; then
         if [[ -z $emoji ]]; then
-            print "%(?..👾 %?)"
+            print - "%(?..👾 %?)"
         else
-            print "%(?..$emoji %?)"
+            print - "%(?..$emoji %?)"
         fi
     else
-        print "%?"
+        print - "%?"
     fi
 }
 
 # determine remote ssh host
 remote_host() {
     if [[ -z "$SSH_CLIENT" ]]; then
-        print ""
+        print - ""
     else
-        print "%{$fg_bold[white]%}@%{$reset_color$fg[yellow]%}$(hostname -s)"
+        print - "%{$fg_bold[white]%}@%{$reset_color$fg[yellow]%}$(hostname -s)"
     fi
 }
 
@@ -57,9 +57,9 @@ vcs_info_wrapper() {
     remote=$(remote_host)
 
     if [[ ${vcs_info_msg_0_} ]]; then
-        print "$(username magenta)${remote} ${vcs_info_msg_0_} $(current_time)%{$reset_color%}"
+        print - "$(username magenta)${remote} ${vcs_info_msg_0_} $(current_time)%{$reset_color%}"
     else
-        print "$(username magenta)${remote} $(current_time)%{$reset_color%}"
+        print - "$(username magenta)${remote} $(current_time)%{$reset_color%}"
     fi
 }
 

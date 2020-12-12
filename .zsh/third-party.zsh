@@ -11,6 +11,6 @@ for f in $third_party_scripts; do
     if [[ -r $f ]]; then
 	. $f
     else
-	print "Unable to load $f"
+	print - "Unable to load $f"
     fi
 done

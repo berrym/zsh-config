@@ -15,7 +15,7 @@ for f in $zsh_scripts; do
     if [[ -r $f ]]; then
         . $f
     else
-        print "Unable to load $f"
+        print - "Unable to load $f"
     fi
 done
 
@@ -32,9 +32,9 @@ if [[ $? -eq 0 ]]; then
 fi
 
 # Load custom prompt
-PROMPT_THEME=$PROMPTDIR/berrym-arrows.zsh
+PROMPT_THEME=$PROMPTDIR/berrym-default.zsh
 if [[ -r $PROMPT_THEME ]]; then
     . $PROMPT_THEME
 else
-    print "Unable to load prompt theme $PROMPT_THEME"
+    print - "Unable to load prompt theme $PROMPT_THEME"
 fi

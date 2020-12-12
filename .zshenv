@@ -14,6 +14,7 @@ path=(/usr/local/bin
       /bin
       /sbin
       ~/.local/bin
+      ~/.cargo/bin
       ~/bin
       $path)
 
@@ -77,10 +78,10 @@ else
     PAGER=more
 fi
 
-# Check for the mg editor, else default to vi
-command -v mg &>/dev/null
+# Check for the nvim editor, else default to vi
+command -v nvim &>/dev/null
 if [[ $? -eq 0 ]]; then
-    EDITOR=mg
+    EDITOR=nvim
 else
     EDITOR=vi
 fi
