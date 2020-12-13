@@ -5,52 +5,23 @@
 
 print - "Detecting OS to load aliases."
 
-if [[ $OSNAME == "Linux" ]]; then
+if isLinux; then
     ALIASFILE=${ALIASDIR}/linux-aliases.zsh
-    if [[ -r $ALIASFILE ]]; then
-        print - "Loading aliases from $ALIASFILE"
-        . $ALIASFILE
-    else
-        print - "Unable to source $ALIASFILE"
-    fi
-elif [[ $OSNAME == "OpenBSD" ]]; then
+elif isDarwin; then
     ALIASFILE=${ALIASDIR}/darwin-aliases.zsh
-    if [[ -r $ALIASFILE ]]; then
-        print - "Loading aliases from $ALIASFILE"
-        . $ALIASFILE
-    else
-        print - "Unable to source $ALIASFILE"
-    fi
-elif [[ $OSNAME == "FreeBSD" ]]; then
+elif isFreeBSD; then
     ALIASFILE=${ALIASDIR}/freebsd-aliases.zsh
-    if [[ -r $ALIASFILE ]]; then
-        print - "Loading aliases from $ALIASFILE"
-        . $ALIASFILE
-    else
-        print - "Unable to source $ALIASFILE"
-    fi
-elif [[ $OSNAME == "OpenBSD" ]]; then
+elif isOpenBSD; then
     ALIASFILE=${ALIASDIR}/openbsd-aliases.zsh
-    if [[ -r $ALIASFILE ]]; then
-        print - "Loading aliases from $ALIASFILE"
-        . $ALIASFILE
-    else
-        print - "Unable to source $ALIASFILE"
-    fi
-elif [[ $OSNAME == "NetBSD" ]]; then
+elif isNetBSD; then
     ALIASFILE=${ALIASDIR}/netbsd-aliases.zsh
-    if [[ -r $ALIASFILE ]]; then
-        print - "Loading aliases from $ALIASFILE"
-        . $ALIASFILE
-    else
-        print - "Unable to source $ALIASFILE"
-    fi
-elif [[ $OSNAME == "DragonFly" ]]; then
+elif isDragonFly; then
     ALIASFILE=${ALIASDIR}/dragonfly-aliases.zsh
-    if [[ -r $ALIASFILE ]]; then
-        print - "Loading aliases from $ALIASFILE"
-        . $ALIASFILE
-    else
-        print - "Unable to source $ALIASFILE"
-    fi
+fi
+
+if [[ -r $ALIASFILE ]]; then
+    print - "Loading aliases from $ALIASFILE"
+    . $ALIASFILE
+else
+    print - "Unable to source $ALIASFILE"
 fi
