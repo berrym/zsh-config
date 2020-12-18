@@ -1,3 +1,10 @@
+# prompts.zsh - Custom prompts
+#
+# (c) 2020 Michael Berry <trismegustis@gmail.com>
+
+# Behave like the z shell/load default options
+emulate -L zsh
+
 # Version control info
 autoload -Uz vcs_info compinit && compinit
 
@@ -63,7 +70,7 @@ vcs_info_wrapper() {
     fi
 }
 
-# Load vcs info before each prompt
+# load vcs info before each prompt
 precmd() {
     vcs_info
     load_custom_prompt

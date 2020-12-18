@@ -2,6 +2,8 @@
 #
 # (c) 2020 Michael Berry <trismegustis@gmail.com>
 
+emulate -L zsh
+
 # Load custom scripts
 zsh_scripts=(
     $ZSHDIR/zshopts.zsh  # zsh options
@@ -11,30 +13,28 @@ zsh_scripts=(
     $ZSHDIR/third-party.zsh # third party functions
 )
 
+print - "$fg[yellow] * $fg[magenta] Loading custom scripts."
 for f in $zsh_scripts; do
     if [[ -r $f ]]; then
+        print - "$fg[cyan]    * loading $f"
         . $f
     else
-        print - "Unable to load $f"
+        print - "$fg[red]    Unable to load $f"
     fi
 done
-
-# Display bovine wisdom
-command -v cowsay &>/dev/null && command -v fortune &>/dev/null
-if [[ $? -eq 0 ]]; then
-    cowsay -f stegosaurus `fortune`
-fi
-
-# Run the powerline daemon
-command -v powerline-daemon &>/dev/null
-if [[ $? -eq 0 ]]; then
-    powerline-daemon &>/dev/null
-fi
 
 # Load custom prompt
 PROMPT_THEME=$PROMPTDIR/berrym-default.zsh
 if [[ -r $PROMPT_THEME ]]; then
+    print - "$fg[yellow] * $fg[magenta] Loading custom prompt."
+    print - "$fg[green]    sourcing $PROMPT_THEME $reset_color"
     . $PROMPT_THEME
 else
-    print - "Unable to load prompt theme $PROMPT_THEME"
+    print - "$fg[red]    Unable to source $PROMPT_THEME $reset_color"
+fi
+
+# Display bovine wisdom
+command -v cowsay &>/dev/null && command -v fortune &>/dev/null
+if [[ $? -eq 0 ]]; then
+    cowsay `fortune`
 fi
