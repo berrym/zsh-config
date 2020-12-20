@@ -2,9 +2,6 @@
 #
 # (c) 2020 Michael Berry <trismegustis@gmail.com>
 
-# Behave like the z shell/load default options
-emulate -L zsh
-
 # Version control info
 autoload -Uz vcs_info compinit && compinit
 

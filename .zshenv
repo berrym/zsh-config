@@ -2,8 +2,11 @@
 #
 # (c) 2020 Michael Berry <trismegustis@gmail.com>
 
-# Behave like the z shell/load default options
+# Behave like the z shell/load zsh options
 emulate -L zsh
+autoload -Uz colors && colors
+
+print - "$fg[yellow] * $fg[magenta] Sourcing .zshenv$reset_color"
 
 # Set path and other OS independent variables
 typeset -U path
@@ -22,38 +25,30 @@ LANG=en_US.UTF-8
 CHARSET=en_US.UTF-8
 OSNAME=$(uname -s)        # Determine OS
 
-# Test if OS is Linux
+# Define some OS tests
 isLinux() {
     [[ $OSNAME == "Linux" ]]
 }
 
-# Test if OS is Darwin
 isDarwin() {
     [[ $OSNAME == "Darwin" ]]
 }
 
-# Test if OS is FreeBSD
 isFreeBSD() {
     [[ $OSNAME == "FreeBSD" ]]
 }
 
-# Test if OS is OpenBSD
 isOpenBSD() {
     [[ $OSNAME == "OpenBSD" ]]
 }
 
-# Test if OS is NetBSD
 isNetBSD() {
     [[ $OSNAME == "NetBSD" ]]
 }
 
-# Test if OS is DragonFly
 isDragonFly() {
     [[ $OSNAME == "DragonFly" ]]
 }
-
-autoload colors
-colors
 
 print - "$fg[yellow] * $fg[magenta] Detecting OS to set environment."
 
@@ -107,7 +102,7 @@ if [[ $? -eq 0 ]]; then
 fi
 
 # Run tmux
-if command -v tmux &>/dev/null && [[ -z "$TMUX" ]]; then
+if [[ -z "$TMUX" ]]; then
     tmux attach -t default || tmux new -s default
 fi
 

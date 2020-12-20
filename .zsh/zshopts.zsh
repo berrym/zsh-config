@@ -6,8 +6,7 @@
 autoload -Uz run-help
 HELPDIR=/usr/local/share/zsh/help
 
-autoload -Uz colors zsh-mime-setup select-word-style
-colors                        # colors
+autoload -Uz zsh-mime-setup select-word-style
 zsh-mime-setup                # run everything like an executable
 select-word-style bash        # [ctrl]+w on words
 
@@ -140,12 +139,13 @@ bindkey -M menuselect '^o' accept-and-infer-next-history
 zstyle ':completion:*:cd*' tag-order \
        local-directories directory-stack path-directories
 
-# Pushd
+# pushd
 setopt auto_pushd             # make cd push old dir on dir stack
 setopt pushd_ignore_dups      # no duplicates in dir stack
 setopt pushd_silent           # no dir stack after pushd or popd
 setopt pushd_to_home          # `pushd` = `pushd $HOME`
 
+# history
 setopt append_history         # append history
 setopt hist_ignore_dups       # ignore duplicates
 setopt hist_ignore_space      # ignore space prefixed commands
@@ -155,9 +155,9 @@ setopt inc_append_history     # immediately add commands
 setopt share_history          # share history between sessions
 setopt bang_hist              # ! syntax to access history
 
-# Misc options
+# misc options
 setopt autocd                 # if command is a path, cd into it
-setopt auto_remove_slash      # self explicit
+setopt auto_remove_slash      # remove trailing slash
 setopt correct                # try to correct spelling of commands
 setopt extended_glob          # activate complex pattern globbing
 setopt noclobber              # don't overwrite file, use >! to do so

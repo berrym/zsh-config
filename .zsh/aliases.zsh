@@ -2,8 +2,6 @@
 #
 # (c) 2020 Michael Berry <trismegustis@gmail.com>
 
-emulate -L zsh
-
 if isLinux; then
     ALIASFILE=$ALIASDIR/linux-aliases.zsh
 elif isDarwin; then

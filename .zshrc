@@ -2,7 +2,7 @@
 #
 # (c) 2020 Michael Berry <trismegustis@gmail.com>
 
-emulate -L zsh
+print - "$fg[yellow] * $fg[magenta] Sourcing .zshrc$reset_color"
 
 # Load custom scripts
 zsh_scripts=(
