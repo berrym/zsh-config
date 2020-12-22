@@ -64,7 +64,7 @@ elif isFreeBSD; then
 elif isOpenBSD; then
     print - "$fg[green]    OS is OpenBSD."
     path=($path /usr/X11R6/bin)
-    TERM=xterm-xfree86
+    #TERM=xterm-xfree86
     hash -d ports=/usr/ports
     hash -d src=/usr/src
     hash -d xenocara=/usr/xenocara
@@ -102,8 +102,11 @@ if [[ $? -eq 0 ]]; then
 fi
 
 # Run tmux
-if [[ -z "$TMUX" ]]; then
-    tmux attach -t default || tmux new -s default
+command -v tmux &>/dev/null
+if [[ $? -eq 0 ]]; then
+    if [[ -z "$TMUX" ]]; then
+        tmux -2 attach -t default || tmux -2 new -s default
+    fi
 fi
 
 # Set global exports
