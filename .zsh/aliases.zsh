@@ -1,6 +1,6 @@
 # aliases.zsh - Load aliases based on OS detection
 #
-# (c) 2020 Michael Berry <trismegustis@gmail.com>
+# (c) 2021 Michael Berry <trismegustis@gmail.com>
 
 if isLinux; then
     ALIASFILE=$ALIASDIR/linux-aliases.zsh

@@ -1,6 +1,6 @@
 # third-party.zsh - third party z shell extensions
 #
-# (c) 2020 Michael Berry <trismegustis@gmail.com>
+# (c) 2021 Michael Berry <trismegustis@gmail.com>
 
 third_party_scripts=(
     $ZSH_THIRD_PARTY_DIR/zsh-autosuggestions/zsh-autosuggestions.zsh
@@ -9,8 +9,8 @@ third_party_scripts=(
 
 for f in $third_party_scripts; do
     if [[ -r $f ]]; then
-	. $f
+        . $f
     else
-	print - "Unable to load $f"
+        print - "Unable to load $f"
     fi
 done

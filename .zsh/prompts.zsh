@@ -1,6 +1,6 @@
 # prompts.zsh - Custom prompts
 #
-# (c) 2020 Michael Berry <trismegustis@gmail.com>
+# (c) 2021 Michael Berry <trismegustis@gmail.com>
 
 # Version control info
 autoload -Uz vcs_info compinit && compinit
@@ -67,8 +67,13 @@ vcs_info_wrapper() {
     fi
 }
 
+set_win_title() {
+    echo -ne "\033]0; $(basename $PWD) \007"
+}
+
 # load vcs info before each prompt
 precmd() {
+    set_win_title
     vcs_info
     load_custom_prompt
 }

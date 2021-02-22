@@ -120,3 +120,4 @@ ZSHDIR=$HOME/.zsh
 ALIASDIR=$ZSHDIR/aliases
 PROMPTDIR=$ZSHDIR/prompts
 ZSH_THIRD_PARTY_DIR=$ZSHDIR/third-party
+source "$HOME/.cargo/env"

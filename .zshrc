@@ -1,6 +1,6 @@
 # .zshrc - z shell config file
 #
-# (c) 2020 Michael Berry <trismegustis@gmail.com>
+# (c) 2021 Michael Berry <trismegustis@gmail.com>
 
 print - "$fg[yellow] * $fg[magenta] Sourcing .zshrc$reset_color"
 
@@ -24,7 +24,7 @@ for f in $zsh_scripts; do
 done
 
 # Load custom prompt
-PROMPT_THEME=$PROMPTDIR/berrym-default.zsh
+PROMPT_THEME=$PROMPTDIR/berrym-lambda.zsh
 if [[ -r $PROMPT_THEME ]]; then
     print - "$fg[yellow] * $fg[magenta] Loading custom prompt."
     print - "$fg[green]    sourcing $PROMPT_THEME $reset_color"
