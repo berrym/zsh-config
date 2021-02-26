@@ -1,5 +1,3 @@
-print - "$fg[yellow] * $fg[magenta] Sourcing .zlogin$reset_color"
-
 # Load tmux
 if [[ "$SSH_CLIENT" ]]; then
     if [[ -z "$TMUX" ]]; then

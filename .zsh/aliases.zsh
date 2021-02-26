@@ -17,9 +17,5 @@ elif isDragonFly; then
 fi
 
 if [[ -r $ALIASFILE ]]; then
-    print - "$fg[yellow] * $fg[magenta] Setting aliases"
-    print - "$fg[green]    sourcing $ALIASFILE $reset_color"
     . $ALIASFILE
-else
-    print - "$fg[red]    Unable to source $ALIASFILE $reset_color"
 fi
