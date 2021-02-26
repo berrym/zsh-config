@@ -50,9 +50,9 @@ isDragonFly() {
 
 
 if isLinux; then
-    ;;
+    :
 elif isDarwin; then
-    ;;
+    :
 elif isFreeBSD; then
     path=($path /usr/X11R6/bin)
     hash -d ports=/usr/ports
