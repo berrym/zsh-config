@@ -59,7 +59,7 @@ _lab() {
     local LABDIR=$HOME/Lab
     cd $LABDIR
     local SUBDIRS=(`ls -Rd */ |  sed '/"-f"/d'`)
-    compadd "$@" $SUBDIRS
+    compadd -a SUBDIRS
     popd
 }
 
