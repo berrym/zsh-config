@@ -53,24 +53,22 @@ zstyle ':completion:*:approximate:*' max-errors \
 
 zstyle ':completion:*:default' list-prompt '%S%M matches%s'
 zstyle ':completion:*' auto-description 'specify %d'
-zstyle ':completion:*' list-colors '#=(#b) #([0-9]#)*=36=31'
-zstyle ':completion:*' menu select
+zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
+zstyle ':completion:*' menu select ${(s.:.)LS_COLORS}
 
 # kill completion menu
 zstyle ':completion:*:kill:*' menu yes select
 zstyle ':completion:*:kill:*' force-list always
-zstyle ':completion:*:*:kill:*:processes' list-colors \
-       '=(#b) #([0-9]#) ([0-9a-z-]#)*=01;34=0=01'
-
-zstyle ':completion:*:killall:*' force-list always
-zstyle ':completion:*:default' list_prompt
+zstyle ':completion:*:*:kill:*:processes' list-colors ${(s.:.)LS_COLORS}
 
 # killall menu
+zstyle ':completion:*:killall:*' force-list always
+zstyle ':completion:*:default' list_prompt
 zstyle ':completion:*:processes-names' list-colors \
        command 'ps c -u ${USER} -o command | uniq'
 
 # format descriptions
-zstyle ':completion:descriptions' format $'\e[00;34,%d'
+zstyle ':completion:descriptions' format "%{$fg[cyan]%}"
 
 # provide verbose completion information
 zstyle ':completion:*' verbose yes
@@ -82,13 +80,11 @@ zstyle ':completion:*:man:*' menu yes select
 
 # start menu completion if no unambiguous initial string was found
 zstyle ':completion:*:correct:*'  insert-unambiguous true
-zstyle ':completion:*:corrections' format \
-       $'%{\e[0;31m%}%d (errors: %e)%{\e[0m%}'
+zstyle ':completion:*:corrections' format "%{$fg[red]%}%d (errors: %e)%{$reset_color%}"
 zstyle ':completion:*:correct:*' original true
 
 # format on completion
-zstyle ':completion:*:descriptions' format \
-       $'%{\e[0;31m%}completing %B%d%b%{\e[0m%}'
+zstyle ':completion:*:descriptions' format "%{$fg[cyan]%}completing %B%d%b%{$reset_color%}"
 
 # automatically complete 'cd -<tab>' and 'cd -<ctrl-d>' with menu
 zstyle ':completion:*:*:cd:*:directory-stack' menu yes select
