@@ -17,6 +17,16 @@ username() {
     print - "%{$fg[$color]%}%n%{$reset_color%}"
 }
 
+# current directory, optionally $level deep
+directory() {
+    level=$1
+    if [[ $level ]]; then
+        print - "%$level~"
+    else
+        print - "%~"
+    fi
+}
+
 # current time with milliseconds
 current_time() {
     print - "%*"
