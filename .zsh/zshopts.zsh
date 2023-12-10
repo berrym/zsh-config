@@ -1,6 +1,6 @@
 # zshopts - z shell options
 #
-# (c) 2021 Michael Berry <trismegustis@gmail.com>
+# (c) 2023 Michael Berry <trismegustis@gmail.com>
 
 # Gain access to online help
 autoload -Uz run-help
@@ -73,7 +73,7 @@ zstyle ':completion:*:processes-names' list-colors \
 zstyle ':completion:descriptions' format $'\e[00;34,%d'
 
 # provide verbose completion information
-#zstyle ':completion:*' verbose yes
+zstyle ':completion:*' verbose yes
 
 # complete manuals by sections
 zstyle ':completion:*:manuals' seperate-sections true

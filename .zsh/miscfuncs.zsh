@@ -1,6 +1,6 @@
-# zshfuncs.zsh - z shell miscellaneous functions
+# miscfuncs.zsh - z shell miscellaneous functions
 #
-# (c) 2020 Michael Berry <trismegustis@gmail.com>
+# (c) 2023 Michael Berry <trismegustis@gmail.com>
 
 # Print more information to user if positive
 VERBOSE=1
@@ -26,11 +26,6 @@ cl() {
     fi
 }
 
-# Print a list of modified files
-modified () {
-    print -l -- *(m-${1:-1})
-}
-
 # Switch to directory, create it if necessary
 mkcd() {
     emulate -RL zsh
@@ -54,28 +49,29 @@ mkcd() {
     cd $1
 }
 
-# Completion for lab function
-_lab() {
-    local LABDIR=$HOME/Lab
-    cd $LABDIR
-    local SUBDIRS=(`ls -Rd */ |  sed '/"-f"/d'`)
-    compadd -a SUBDIRS
-    popd
-}
-
 # Switch to LABDIR root directory or a project subdir, create it if needed
 lab() {
     emulate -RL zsh
 
-    local LABDIR=$HOME/Lab
-
     if [[ $ARGC -eq 0 ]]; then
-        mkcd $LABDIR
+        mkcd $LAB_DIR
     elif [[ $ARGC -eq 1 ]]; then
-        mkcd $LABDIR/$1
+        mkcd $LAB_DIR/$1
     else
         print - 'usage: lab <directory>\n'
+        return 1
     fi
 }
 
-compdef _lab lab
+# Load a custom prompt
+loadCustomPrompt() {
+    emulate -RL zsh
+
+    if [[ ! $ARGC -eq 1 ]]; then
+        print - 'usage: loadCustomPrompt <prompt-name>\n'
+        return 1
+    else
+        local prompt_theme=$PROMPT_DIR/$1.zsh
+        [[ -r $prompt_theme ]] && . $prompt_theme
+    fi
+}

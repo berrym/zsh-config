@@ -92,11 +92,11 @@ fi
 # Run tmux
 command -v tmux &>/dev/null
 if [[ $? -eq 0 ]]; then
-    if [[ $- =~ i ]] && [[ -z "$TMUX" ]] && [[ -n "$SSH_TTY" ]]; then
-        tmux attach-session -t ssh_tmux || tmux new-session -s ssh_tmux
-    else
-        if [[ -z "$TMUX" ]]; then
-            tmux -2 attach -t local_tmux || tmux -2 new -s local_tmux
+    if [[ -z "$TMUX" ]]; then
+        if [[ -z "SSH_CONNECTION" ]] || [[ -n "$SSH_CLIENT" ]] || [[ -n "$SSH_TTY" ]]; then
+            tmux attach -t=remote_tmux || tmux new -s remote_tmux
+        else
+            tmux attach -t=local_tmux || tmux new -s local_tmux
         fi
     fi
 fi
@@ -108,12 +108,14 @@ HISTSIZE=100
 SAVEHIST=100
 HISTFILE=$HOME/.zsh_history
 
-ZSHDIR=$HOME/.zsh
-ALIASDIR=$ZSHDIR/aliases
-PROMPTDIR=$ZSHDIR/prompts
-ZSH_THIRD_PARTY_DIR=$ZSHDIR/third-party
+ZSH_DIR=$HOME/.zsh
+ALIAS_DIR=$ZSH_DIR/aliases
+PROMPT_DIR=$ZSH_DIR/prompts
+COMPLETERS_DIR=$ZSH_DIR/completers
+THIRD_PARTY_DIR=$ZSH_DIR/third-party
+LAB_DIR=$HOME/Lab
 
 # Set some code language environments
-[[ -f "$HOME/.ghcup/env" ]] && source "$HOME/.ghcup/env"
+[[ -f "$HOME/.ghcup/env" ]] && . "$HOME/.ghcup/env"
 
-[[ -f "$HOME/.cargo/env" ]] && source "$HOME/.cargo/env"
+[[ -f "$HOME/.cargo/env" ]] && . "$HOME/.cargo/env"

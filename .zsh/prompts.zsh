@@ -1,6 +1,6 @@
 # prompts.zsh - Custom prompts
 #
-# (c) 2021 Michael Berry <trismegustis@gmail.com>
+# (c) 2023 Michael Berry <trismegustis@gmail.com>
 
 # Version control info
 autoload -Uz vcs_info compinit && compinit
@@ -9,22 +9,12 @@ zstyle ':vcs_info:*' enable git hg svn cvs bzr
 zstyle ':vcs_info:*' check-for-changes true
 zstyle ':vcs_info:*' get-revision true
 zstyle ':vcs_info:(git|hg|svn|cvs|bzr):*' branchformat '%b%F{1}:%F{3}%r'
-zstyle ':vcs_info:*' formats "%{$fg[magenta]%}(%{$fg[green]%}%s%{$fg[magenta]%})%{$fg[magenta]%}%c%{$fg[green]%}%u%{$fg[yellow]%} %b%{$reset_color%}:%{$fg[cyan]%}%r%{$reset_color%}"
+zstyle ':vcs_info:*' formats "%{$fg[cyan]%}(%{$fg[yellow]%}%s%{$fg[cyan]%})%{$fg[cyan]%}%c%{$fg[yellow]%}%u%{$fg[yellow]%} %b%{$reset_color%}:%{$fg[cyan]%}%r%{$reset_color%}"
 
 # color username
 username() {
     color=$1
     print - "%{$fg[$color]%}%n%{$reset_color%}"
-}
-
-# current directory, optionally $level deep
-directory() {
-    level=$1
-    if [[ $level ]]; then
-        print - "%$level~"
-    else
-        print - "%~"
-    fi
 }
 
 # current time with milliseconds
@@ -49,10 +39,10 @@ return_status() {
 
 # determine remote ssh host
 remote_host() {
-    if [[ -z "$SSH_CLIENT" ]]; then
-        print - ""
+    if [[ -z "$SSH_CONNECTION" ]] || [[ -n "$SSH_CLIENT" ]] || [[ -n "$SSH_TTY" ]]; then
+        ;
     else
-        print - "%{$fg_bold[white]%}@%{$reset_color$fg[yellow]%}$(hostname -s)"
+        print - "%{$fg_bold[yellow]%}@%{$reset_color$fg[yellow]%}$(hostname -s)"
     fi
 }
 
@@ -61,15 +51,18 @@ vcs_info_wrapper() {
     remote=$(remote_host)
 
     if [[ ${vcs_info_msg_0_} ]]; then
-        print - "$(username magenta)${remote} ${vcs_info_msg_0_} $(current_time)%{$reset_color%}"
+        print - "$(username cyan)${remote} ${vcs_info_msg_0_} $(current_time)%{$reset_color%}"
     else
-        print - "$(username magenta)${remote} $(current_time)%{$reset_color%}"
+        print - "$(username cyan)${remote} $(current_time)%{$reset_color%}"
     fi
 }
 
 set_win_title() {
     echo -ne "\033]0; $(basename $PWD) \007"
 }
+
+# dummy value for load_custom_prompt
+load_custom_prompt() {}
 
 # load vcs info before each prompt
 precmd() {
