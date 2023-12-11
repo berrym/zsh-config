@@ -18,7 +18,7 @@ zstyle ':vcs_info:*' formats \
        "%{$fg[cyan]%}(%{$fg[yellow]%}%s%{$fg[cyan]%})-[%{$fg[yellow]%}%b%u%c%{$fg[cyan]%}]%{$reset_color%}"
 
 load_prompt_theme() {
-    PS1="%B$(return_status true)%{$fg[magenta]%}$(directory) %{$fg[cyan]%}λ%b%{$reset_colors%} " 
+    PS1="%B$(return_status true)%{$fg[cyan]%}$(directory) %{$fg[yellow]%}λ%b%{$reset_colors%} " 
     RPS1="%B$(remote_host) ${vcs_info_msg_0_} $(current_time)%b%{$reset_color%}"
 }
 
