@@ -1,22 +1,21 @@
 autoload -Uz vcs_info
 
 # set formats
-# %s - scm
+# %s - vcs
 # %b - branchname
-# %u - unstagedstr (see below)
-# %c - stagedstr (see below)
-# %a - action (e.g. rebase-i)
+# %u - unstagedstr
+# %c - stagedstr
+# %a - action
 # %R - repository path
 # %S - path in the repository
 
 zstyle ':vcs_info:*' enable git hg svn cvs bzr
-zstyle ':vcs_info:*:prompt:*' check-for-changes true
-zstyle ':vcs_info:*:prompt:*' get-revision true
-zstyle ':vcs_info:*:prompt:*' unstagedstr '%{$fg[red]%} ●'
-zstyle ':vcs_info:*:prompt:*' stagedstr '%{$fg[green]%} ●'
+zstyle ':vcs_info:*' check-for-changes true
+zstyle ':vcs_info:*' get-revision true
+zstyle ':vcs_info:*' unstagedstr '%{$fg[red]%} ●'
+zstyle ':vcs_info:*' stagedstr '%{$fg[green]%} ●'
 zstyle ':vcs_info:*' formats \
        '%{$fg[cyan]%}(%{$fg[yellow]%}%s%{$fg[cyan]%})-[%{$fg[yellow]%}%b%u%c%{$fg[cyan]%}]%{$reset_color%}'
-
 
 load_prompt_theme() {
     PS1="%B$(return_status true)%{$fg[magenta]%}$(directory) %{$fg[cyan]%}λ%b%{$reset_colors%} " 
