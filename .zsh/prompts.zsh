@@ -1,20 +1,16 @@
-# prompts.zsh - Custom prompts
+# prompts.zsh - Prompt utilities
 #
 # (c) 2023 Michael Berry <trismegustis@gmail.com>
 
-# Version control info
-autoload -Uz vcs_info compinit && compinit
-
-zstyle ':vcs_info:*' enable git hg svn cvs bzr
-zstyle ':vcs_info:*' check-for-changes true
-zstyle ':vcs_info:*' get-revision true
-zstyle ':vcs_info:(git|hg|svn|cvs|bzr):*' branchformat '%b%F{1}:%F{3}%r'
-zstyle ':vcs_info:*' formats "%{$fg[cyan]%}(%{$fg[yellow]%}%s%{$fg[cyan]%})%{$fg[cyan]%}%c%{$fg[yellow]%}%u%{$fg[yellow]%} %b%{$reset_color%}:%{$fg[cyan]%}%r%{$reset_color%}"
-
 # color username
 username() {
-    color=$1
-    print - "%{$fg[$color]%}%n%{$reset_color%}"
+    local color
+    if [[ $ARGC -ne 1 ]]; then
+        color=cyan
+    else
+        color=$1
+    fi
+    print - "%{$fg[$color]%}%n"
 }
 
 # current directory, optionally $level deep
@@ -61,22 +57,12 @@ vcs_info_wrapper() {
     remote=$(remote_host)
 
     if [[ ${vcs_info_msg_0_} ]]; then
-        print - "$(username cyan)${remote} ${vcs_info_msg_0_} $(current_time)%{$reset_color%}"
+        print - "${remote} ${vcs_info_msg_0_} $(current_time)%{$reset_color%}"
     else
-        print - "$(username cyan)${remote} $(current_time)%{$reset_color%}"
+        print - "${remote} $(current_time)%{$reset_color%}"
     fi
 }
 
-set_win_title() {
-    echo -ne "\033]0; $(basename $PWD) \007"
-}
-
-# dummy value for load_custom_prompt
-load_custom_prompt() {}
-
-# load vcs info before each prompt
-precmd() {
-    set_win_title
-    vcs_info
-    load_custom_prompt
+set_title() {
+    print -Pn  "\e]1; $(basename $PWD) \0"
 }

@@ -1,4 +1,18 @@
-load_custom_prompt() {
-    PROMPT="%(?.%{$fg[cyan]%}√.%{$fg[red]%}$(return_status false))%{$fg[magenta]%} $(directory) %{$fg[yellow]%}➜ "
-    RPROMPT=$(vcs_info_wrapper)
+autoload -Uz add-zsh-hook vcs_info
+
+zstyle ':vcs_info:*' enable git hg svn cvs bzr
+zstyle ':vcs_info:*' check-for-changes true
+zstyle ':vcs_info:*' get-revision true
+zstyle ':vcs_info:*' formats \
+       "%{$fg[cyan]%}(%{$fg[yellow]%}%s%{$fg[cyan]%})" \
+       "%{$fg[cyan]%}%c%{$fg[yellow]%}%u%{$fg[yellow]%} %b" \
+       "%{$reset_color%}:%{$fg[cyan]%}%r%{$reset_color%}"
+
+load_prompt_theme() {
+    PS1="%(?.%{$fg[cyan]%}√.%{$fg[red]%}$(return_status false))%{$fg[magenta]%} $(directory) %{$fg[yellow]%}➜%{$reset_colors%} "
+    RPS1="%B$(vcs_info_wrapper)%b"
 }
+
+add-zsh-hook precmd set_title
+add-zsh-hook precmd vcs_info
+add-zsh-hook precmd load_prompt_theme
