@@ -88,6 +88,8 @@ zstyle ':completion:*:descriptions' format "%{$fg[cyan]%}completing %B%d%b%{$res
 
 # automatically complete 'cd -<tab>' and 'cd -<ctrl-d>' with menu
 zstyle ':completion:*:*:cd:*:directory-stack' menu yes select
+# disable named-directories autocompletion
+zstyle ':completion:*:cd*' tag-order local-directories directory-stack path-directories
 
 # insert all expansions for expand completer
 zstyle ':completion:*:expand:*' tag-order all-expansions
@@ -106,6 +108,46 @@ zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
 # separate matches into groups
 zstyle ':completion:*:matches' group 'yes'
 zstyle ':completion:*' group-name ''
+
+if [[ "$NOMENU" -eq 0 ]] ; then
+    # if there are more than 5 options allow selecting from a menu
+    zstyle ':completion:*' menu select=5
+else
+    # don't use any menus at all
+    setopt no_auto_menu
+fi
+zstyle ':completion:*:messages' format '%d'
+zstyle ':completion:*:options' auto-description '%d'
+
+# describe options in full
+zstyle ':completion:*:options' description 'yes'
+
+# on processes completion complete all user processes
+zstyle ':completion:*:processes' command 'ps -au$USER'
+
+# offer indexes before parameters in subscripts
+zstyle ':completion:*:*:-subscript-:*' tag-order indexes parameters
+
+# provide verbose completion information
+zstyle ':completion:*' verbose true
+
+# recent (as of Dec 2007) zsh versions are able to provide descriptions
+# for commands (read: 1st word in the line) that it will list for the user
+# to choose from. The following disables that, because it's not exactly fast.
+zstyle ':completion:*:-command-:*:' verbose false
+
+# set format for warnings
+zstyle ':completion:*:warnings' format $'%{$fg[red]%}No matches for:%{$reset_color%} %d'
+
+# define files to ignore for zcompile
+zstyle ':completion:*:*:zcompile:*' ignored-patterns '(*~|*.zwc)'
+zstyle ':completion:correct:' prompt 'correct to: %e'
+
+# Ignore completion functions for commands you don't have:
+zstyle ':completion::(^approximate*):*:functions' ignored-patterns '_*'
+
+# Provide more processes in completion of programs like killall:
+zstyle ':completion:*:processes-names' command 'ps c -u ${USER} -o command | uniq'
 
 # Search path for sudo/doas completion
 zstyle ':completion:*:sudo:*' command-path /usr/local/sbin \
@@ -130,10 +172,6 @@ _force_rehash() {
 }
 
 bindkey -M menuselect '^o' accept-and-infer-next-history
-
-# disable named-directories autocompletion
-zstyle ':completion:*:cd*' tag-order \
-       local-directories directory-stack path-directories
 
 # pushd
 setopt auto_pushd             # make cd push old dir on dir stack
