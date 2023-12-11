@@ -115,7 +115,13 @@ COMPLETERS_DIR=$ZSH_DIR/completers
 THIRD_PARTY_DIR=$ZSH_DIR/third-party
 LAB_DIR=$HOME/Lab
 
-# Set some code language environments
+# Set some programming language environments
 [[ -f "$HOME/.ghcup/env" ]] && . "$HOME/.ghcup/env"
 
 [[ -f "$HOME/.cargo/env" ]] && . "$HOME/.cargo/env"
+
+# pyenv
+command -v pyenv &>/dev/null
+if [[ $? -eq 0 ]]; then
+    eval "$(pyenv virtualenv-init -)"
+fi

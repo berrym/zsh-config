@@ -15,7 +15,7 @@ zstyle ':vcs_info:*' get-revision true
 zstyle ':vcs_info:*' unstagedstr '%{$fg[red]%} ●'
 zstyle ':vcs_info:*' stagedstr '%{$fg[green]%} ●'
 zstyle ':vcs_info:*' formats \
-       '%{$fg[cyan]%}(%{$fg[yellow]%}%s%{$fg[cyan]%})-[%{$fg[yellow]%}%b%u%c%{$fg[cyan]%}]%{$reset_color%}'
+       "%{$fg[cyan]%}(%{$fg[yellow]%}%s%{$fg[cyan]%})-[%{$fg[yellow]%}%b%u%c%{$fg[cyan]%}]%{$reset_color%}"
 
 load_prompt_theme() {
     PS1="%B$(return_status true)%{$fg[magenta]%}$(directory) %{$fg[cyan]%}λ%b%{$reset_colors%} " 
