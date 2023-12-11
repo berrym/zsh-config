@@ -1,17 +1,28 @@
-autoload -Uz add-zsh-hook vcs_info
+autoload -Uz vcs_info
+
+# set formats
+# %s - scm
+# %b - branchname
+# %u - unstagedstr (see below)
+# %c - stagedstr (see below)
+# %a - action (e.g. rebase-i)
+# %R - repository path
+# %S - path in the repository
 
 zstyle ':vcs_info:*' enable git hg svn cvs bzr
-zstyle ':vcs_info:*' check-for-changes true
-zstyle ':vcs_info:*' get-revision true
+zstyle ':vcs_info:*:prompt:*' check-for-changes true
+zstyle ':vcs_info:*:prompt:*' get-revision true
+zstyle ':vcs_info:*:prompt:*' unstagedstr '%{$fg[red]%} ●'
+zstyle ':vcs_info:*:prompt:*' stagedstr '%{$fg[green]%} ●'
 zstyle ':vcs_info:*' formats \
-       "%{$fg[cyan]%}(%{$fg[yellow]%}%s%{$fg[cyan]%})" \
-       "%{$fg[cyan]%}%c%{$fg[yellow]%}%u%{$fg[yellow]%} %b" \
-       "%{$reset_color%}:%{$fg[cyan]%}%r%{$reset_color%}"
+       '%{$fg[cyan]%}(%{$fg[yellow]%}%s%{$fg[cyan]%})-[%{$fg[yellow]%}%b%u%c%{$fg[cyan]%}]%{$reset_color%}'
 
 load_prompt_theme() {
-    PS1="%(?.%{$fg[cyan]%}√.%{$fg[red]%}$(return_status false))%{$fg[magenta]%} $(directory) %{$fg[yellow]%}➜%{$reset_colors%} "
-    RPS1="%B$(vcs_info_wrapper)%b"
+    PS1="%B%(?.%{$fg[cyan]%}√.%{$fg[red]%}$(return_status false))%{$fg[magenta]%} $(directory) %{$fg[yellow]%}➜%b%{$reset_colors%} "
+    RPS1="%B$(remote_host) ${vcs_info_msg_0_} $(current_time)%b%{$reset_color%}"
 }
+
+autoload -Uz add-zsh-hook
 
 add-zsh-hook precmd set_title
 add-zsh-hook precmd vcs_info

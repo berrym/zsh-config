@@ -57,7 +57,7 @@ vcs_info_wrapper() {
     remote=$(remote_host)
 
     if [[ ${vcs_info_msg_0_} ]]; then
-        print - "${remote} ${vcs_info_msg_0_} $(current_time)%{$reset_color%}"
+        print - "$(remote_host) ${vcs_info_msg_0_} $(current_time)%{$reset_color%}"
     else
         print - "${remote} $(current_time)%{$reset_color%}"
     fi
