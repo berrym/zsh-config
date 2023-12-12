@@ -12,8 +12,8 @@ autoload -Uz vcs_info
 zstyle ':vcs_info:*' enable git hg svn cvs bzr
 zstyle ':vcs_info:*' check-for-changes true
 zstyle ':vcs_info:*' get-revision true
-zstyle ':vcs_info:*' unstagedstr '%{$fg[red]%} ●'
-zstyle ':vcs_info:*' stagedstr '%{$fg[green]%} ●'
+zstyle ':vcs_info:*' unstagedstr "%{$fg[red]%}U"
+zstyle ':vcs_info:*' stagedstr "%{$fg[green]%}S"
 zstyle ':vcs_info:*' formats \
        "%{$fg[cyan]%}(%{$fg[yellow]%}%s%{$fg[cyan]%})-[%{$fg[yellow]%}%b%u%c%{$fg[cyan]%}]%{$reset_color%}"
 
