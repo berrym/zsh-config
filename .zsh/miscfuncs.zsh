@@ -64,11 +64,11 @@ lab() {
 }
 
 # Load a custom prompt
-loadCustomPrompt() {
+loadPromptTheme() {
     emulate -RL zsh
 
     if [[ ! $ARGC -eq 1 ]]; then
-        print - 'usage: loadCustomPrompt <prompt-name>\n'
+        print - 'usage: loadPromptTheme <prompt-theme>\n'
         return 1
     else
         local prompt_theme=$PROMPT_DIR/$1.zsh

@@ -24,6 +24,5 @@ load_prompt_theme() {
 
 autoload -Uz add-zsh-hook
 
-add-zsh-hook precmd set_title
 add-zsh-hook precmd vcs_info
 add-zsh-hook precmd load_prompt_theme

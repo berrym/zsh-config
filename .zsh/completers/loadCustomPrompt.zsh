@@ -1,8 +1,8 @@
-_loadCustomPrompt() {
+_loadPromptTheme() {
     cd $PROMPT_DIR
-    local -a prompts=(`ls -1 | sed 's/\.[^.]*$//' | sort -u`)
-    compadd -X "%{$fg[cyan]%}completing %BCustom Themed Prompts%b%{$reset_color%}" -a prompts
+    local -a themes=(`ls -1 | sed 's/\.[^.]*$//' | sort -u`)
+    compadd -X "%{$fg[cyan]%}completing %Bprompt themes%b%{$reset_color%}" -a themes
     popd
 }
 
-compdef -a _loadCustomPrompt loadCustomPrompt
+compdef -a _loadPromptTheme loadPromptTheme

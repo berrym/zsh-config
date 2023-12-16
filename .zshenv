@@ -67,38 +67,26 @@ elif isNetBSD; then
     hash -d pkgsrc=/usr/pkgsrc
 fi
 
-# Set pager
-command -v less &>/dev/null
-if [[ $? -eq 0 ]]; then
+if [[ -x "$(command -v less)" ]]; then
     PAGER=less
 else
     PAGER=more
 fi
 
 # Check for the nvim editor, else default to vi
-command -v nvim &>/dev/null
-if [[ $? -eq 0 ]]; then
+if [[ -x "$(command -v nvim)" ]]; then
     EDITOR=nvim
 else
-    EDITOR=vi
+    if [[ -x "$(command -v vim)" ]]; then
+        EDITOR=vim
+    else
+        EDITOR=vi
+    fi
 fi
 
 # Run the powerline daemon
-command -v powerline-daemon &>/dev/null
-if [[ $? -eq 0 ]]; then
+if [[ -x "$(command -v powerline-daemon)" ]]; then
     powerline-daemon &>/dev/null
-fi
-
-# Run tmux
-command -v tmux &>/dev/null
-if [[ $? -eq 0 ]]; then
-    if [[ -z "$TMUX" ]]; then
-        if [[ -z "SSH_CONNECTION" ]] || [[ -n "$SSH_CLIENT" ]] || [[ -n "$SSH_TTY" ]]; then
-            tmux attach -t=remote_tmux || tmux new -s remote_tmux
-        else
-            tmux attach -t=local_tmux || tmux new -s local_tmux
-        fi
-    fi
 fi
 
 # Set global exports
@@ -120,8 +108,7 @@ LAB_DIR=$HOME/Lab
 
 [[ -f "$HOME/.cargo/env" ]] && . "$HOME/.cargo/env"
 
-# pyenv
-command -v pyenv &>/dev/null
-if [[ $? -eq 0 ]]; then
+# start pyenv
+if [[ -x "$(command -v pyenv)" ]]; then
     eval "$(pyenv virtualenv-init -)"
 fi

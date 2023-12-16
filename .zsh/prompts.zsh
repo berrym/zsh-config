@@ -45,24 +45,14 @@ return_status() {
 
 # determine remote ssh host
 remote_host() {
-    if [[ -z "$SSH_CONNECTION" ]] || [[ -n "$SSH_CLIENT" ]] || [[ -n "$SSH_TTY" ]]; then
-        ;
-    else
-        print - "%{$fg_bold[yellow]%}@%{$reset_color$fg[yellow]%}$(hostname -s)"
-    fi
+    [[ $SSH_SESSION -gt 0 ]] && print - "%{$fg[yellow]%}@$(hostname -s)%{$reset_color%}"
 }
 
 
 vcs_info_wrapper() {
-    remote=$(remote_host)
-
     if [[ ${vcs_info_msg_0_} ]]; then
         print - "$(remote_host) ${vcs_info_msg_0_} $(current_time)%{$reset_color%}"
     else
-        print - "${remote} $(current_time)%{$reset_color%}"
+        print - "$(remote_host) $(current_time)%{$reset_color%}"
     fi
-}
-
-set_title() {
-    print -Pn  "\e]1; $(basename $PWD) \0"
 }

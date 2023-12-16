@@ -16,15 +16,18 @@ for f in $zsh_scripts; do
     [[ -r $f ]] && . $f
 done
 
-# Load custom prompt
-if [[ -z "SSH_CONNECTION" ]] || [[ -n "$SSH_CLIENT" ]] || [[ -n "$SSH_TTY" ]]; then
-    loadPromptTheme berrym-default
-else
-    # Load starship prompt
-    command -v starship &>/dev/null
-    if [[ $? -eq 0 ]]; then
-        eval "$(starship init zsh)"
+# Run tmux
+if [[ -x "$(command -v tmux)" ]] && [[ -z "$TMUX" ]]; then
+    if [[ $SSH_SESSION -gt 0 ]]; then
+        tmux attach -t=remote || tmux new -s remote
     else
-        loadPromptTheme berrym-default
+        tmux attach -t=local || tmux new -s local
     fi
+fi
+
+# Load custom prompt
+if [[ -x "$(command -v starship)" ]]; then
+    eval "$(starship init zsh)"
+else
+    loadPromptTheme berrym-name
 fi

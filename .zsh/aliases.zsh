@@ -16,6 +16,4 @@ elif isDragonFly; then
     ALIAS_FILE=$ALIAS_DIR/dragonfly-aliases.zsh
 fi
 
-if [[ -r $ALIAS_FILE ]]; then
-    . $ALIAS_FILE
-fi
+[[ -r $ALIAS_FILE ]] && . $ALIAS_FILE

@@ -79,7 +79,7 @@ zstyle ':completion:*:manuals.*' insert-sections true
 zstyle ':completion:*:man:*' menu yes select
 
 # start menu completion if no unambiguous initial string was found
-zstyle ':completion:*:correct:*'  insert-unambiguous true
+zstyle ':completion:*:correct:*' insert-unambiguous true
 zstyle ':completion:*:corrections' format "%{$fg[red]%}%d (errors: %e)%{$reset_color%}"
 zstyle ':completion:*:correct:*' original true
 
@@ -94,10 +94,8 @@ zstyle ':completion:*:cd*' tag-order local-directories directory-stack path-dire
 # insert all expansions for expand completer
 zstyle ':completion:*:expand:*' tag-order all-expansions
 zstyle ':completion:*:history-words' list false
-
 # activate menu
 zstyle ':completion:*:history-words' menu yes
-
 # ignore duplicate entries
 zstyle ':completion:*:history-words' remove-all-dups yes
 zstyle ':completion:*:history-words' stop yes
