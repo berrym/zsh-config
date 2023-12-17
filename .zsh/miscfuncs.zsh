@@ -75,3 +75,47 @@ loadPromptTheme() {
         [[ -r $prompt_theme ]] && . $prompt_theme
     fi
 }
+
+# Trim surrounding whitespace in a string
+# Works because zsh automatically trims by assigning to variables and by passing arguments
+trim() { print - $1; }
+
+# Screen and tmux's behaviour for when multiple clients are attached
+# to one session differs slightly. In Screen, each client can be connected
+# to the session but view different windows within it, but in tmux,
+# all clients connected to one session must view the same window.
+# This problem can be solved in tmux by spawning two separate sessions and
+# synchronizing the second one to the windows of the first,
+# then pointing a second new session to the first.
+tmux_screen_spawn() {
+    emulate -RL zsh
+
+    if [[ ! $ARGC -eq 1 ]]; then
+        print - 'usage: tmux_screen_spawn <session-name>\n'
+        return 1
+    fi
+
+    base_session="$1"
+    # This actually works without the trim() on all systems except OSX
+    tmux_nb=$(trim `tmux ls | grep "^$base_session" | wc -l`)
+    if [[ "$tmux_nb" == "0" ]]; then
+        print - "Launching tmux base session $base_session ..."
+        tmux new-session -s $base_session
+    else
+        # Make sure we are not already in a tmux session
+        if [[ -z "$TMUX" ]]; then
+            print - "Launching copy of base session $base_session ..."
+            # Session id is date and time to prevent conflict
+            session_id=$(command -p date +"%Y-%m-%d (%H%M%S)")
+            # Create a new session (without attaching it) and link to base session
+            # to share windows
+            tmux new-session -d -t $base_session -s $session_id
+            if [[ "$2" == "1" ]]; then
+                # Create a new window in that session
+                tmux new-window
+            fi
+            # Attach to the new session & kill it once orphaned
+            tmux attach-session -t $session_id \; set-option destroy-unattached
+        fi
+    fi
+}

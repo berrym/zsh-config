@@ -135,7 +135,7 @@ zstyle ':completion:*' verbose true
 zstyle ':completion:*:-command-:*:' verbose false
 
 # set format for warnings
-zstyle ':completion:*:warnings' format $'%{$fg[red]%}No matches for:%{$reset_color%} %d'
+zstyle ':completion:*:warnings' format "%{$fg[red]%}No matches for:%{$reset_color%} %d"
 
 # define files to ignore for zcompile
 zstyle ':completion:*:*:zcompile:*' ignored-patterns '(*~|*.zwc)'
