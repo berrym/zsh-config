@@ -32,3 +32,6 @@ if [[ -x "$(command -v starship)" ]]; then
 else
     loadPromptTheme berrym-name
 fi
+
+# add private ssh key to keychain
+add_ssh_key_to_keychain

@@ -119,3 +119,11 @@ tmux_screen_spawn() {
         fi
     fi
 }
+
+# Add private ssh key to keychain
+add_ssh_key_to_keychain() {
+    if [[ isLinux ]]; then
+        /usr/bin/keychain $HOME/.ssh/id_ed25519
+        source $HOME/.keychain/$HOST-sh
+    fi
+}

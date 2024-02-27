@@ -16,7 +16,7 @@ path=(/usr/local/bin
       /sbin
       ~/.local/bin
       ~/.cargo/bin
-      ~/bin
+      ~/.npm-global/bin
       $path)
 
 LANG=en_US.UTF-8
@@ -92,8 +92,8 @@ fi
 # Set global exports
 export LANG CHARSET PATH PAGER EDITOR
 
-HISTSIZE=100
-SAVEHIST=100
+HISTSIZE=10000
+SAVEHIST=10000
 HISTFILE=$HOME/.zsh_history
 
 ZSH_DIR=$HOME/.zsh
