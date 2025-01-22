@@ -14,6 +14,7 @@ path=(/usr/local/bin
       /usr/sbin
       /bin
       /sbin
+      ~/go/bin
       ~/.local/bin
       ~/.cargo/bin
       ~/.npm-global/bin
@@ -112,3 +113,9 @@ LAB_DIR=$HOME/Lab
 if [[ -x "$(command -v pyenv)" ]]; then
     eval "$(pyenv virtualenv-init -)"
 fi
+
+PATH="/home/mberry/perl5/bin${PATH:+:${PATH}}"; export PATH;
+PERL5LIB="/home/mberry/perl5/lib/perl5${PERL5LIB:+:${PERL5LIB}}"; export PERL5LIB;
+PERL_LOCAL_LIB_ROOT="/home/mberry/perl5${PERL_LOCAL_LIB_ROOT:+:${PERL_LOCAL_LIB_ROOT}}"; export PERL_LOCAL_LIB_ROOT;
+PERL_MB_OPT="--install_base \"/home/mberry/perl5\""; export PERL_MB_OPT;
+PERL_MM_OPT="INSTALL_BASE=/home/mberry/perl5"; export PERL_MM_OPT;

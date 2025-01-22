@@ -105,8 +105,9 @@ tmux_screen_spawn() {
         # Make sure we are not already in a tmux session
         if [[ -z "$TMUX" ]]; then
             print - "Launching copy of base session $base_session ..."
-            # Session id is date and time to prevent conflict
-            session_id=$(command -p date +"%Y-%m-%d (%H%M%S)")
+            # Session id is base session + date and time to prevent conflict
+            dt=$(command -p date +"%Y-%m-%d (%H%M%S)")
+            session_id="$base_session $dt"
             # Create a new session (without attaching it) and link to base session
             # to share windows
             tmux new-session -d -t $base_session -s $session_id
