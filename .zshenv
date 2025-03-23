@@ -14,6 +14,7 @@ path=(/usr/local/bin
       /usr/sbin
       /bin
       /sbin
+      ~/bin
       ~/go/bin
       ~/.local/bin
       ~/.cargo/bin

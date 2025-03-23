@@ -87,10 +87,10 @@ trim() { print - $1; }
 # This problem can be solved in tmux by spawning two separate sessions and
 # synchronizing the second one to the windows of the first,
 # then pointing a second new session to the first.
-tmux_screen_spawn() {
+launch_tmux() {
     emulate -RL zsh
 
-    if [[ ! $ARGC -eq 1 ]]; then
+    if [[ ! $ARGC -ge 1 ]]; then
         print - 'usage: tmux_screen_spawn <session-name>\n'
         return 1
     fi
@@ -111,7 +111,7 @@ tmux_screen_spawn() {
             # Create a new session (without attaching it) and link to base session
             # to share windows
             tmux new-session -d -t $base_session -s $session_id
-            if [[ "$2" == "1" ]]; then
+            if [[ "$2" == "new-window" ]]; then
                 # Create a new window in that session
                 tmux new-window
             fi
