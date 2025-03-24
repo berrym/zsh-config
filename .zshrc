@@ -19,9 +19,9 @@ done
 # Run tmux
 if [[ -x "$(command -v tmux)" ]] && [[ -z "$TMUX" ]]; then
     if [[ $SSH_SESSION -gt 0 ]]; then
-        launch_tmux remote new-window
+        spawn_tmux remote new-window
     else
-        launch_tmux local new-window
+        spawn_tmux local new-window
     fi
 fi
 

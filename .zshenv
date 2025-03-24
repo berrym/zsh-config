@@ -81,7 +81,7 @@ if [[ -x "$(command -v nvim)" ]]; then
 else
     if [[ -x "$(command -v vim)" ]]; then
         EDITOR=vim
-    else
+else
         EDITOR=vi
     fi
 fi
@@ -106,15 +106,24 @@ THIRD_PARTY_DIR=$ZSH_DIR/third-party
 LAB_DIR=$HOME/Lab
 
 # Set some programming language environments
+
+# ghcup for user local haskell
 [[ -f "$HOME/.ghcup/env" ]] && . "$HOME/.ghcup/env"
 
+# cargo for user local rust
 [[ -f "$HOME/.cargo/env" ]] && . "$HOME/.cargo/env"
 
-# start pyenv
-if [[ -x "$(command -v pyenv)" ]]; then
-    eval "$(pyenv virtualenv-init -)"
+# pyenv for local python management
+export PYENV_ROOT="$HOME/.pyenv"
+if [[ -d $PYENV_ROOT/bin ]]; then
+    export PATH="$PYENV_ROOT/bin:$PATH"
+    # start pyenv
+    if [[ -x "$(command -v pyenv)" ]]; then
+        eval "$(pyenv init - zsh)"
+    fi
 fi
 
+# cpan local perl management
 PATH="/home/mberry/perl5/bin${PATH:+:${PATH}}"; export PATH;
 PERL5LIB="/home/mberry/perl5/lib/perl5${PERL5LIB:+:${PERL5LIB}}"; export PERL5LIB;
 PERL_LOCAL_LIB_ROOT="/home/mberry/perl5${PERL_LOCAL_LIB_ROOT:+:${PERL_LOCAL_LIB_ROOT}}"; export PERL_LOCAL_LIB_ROOT;

@@ -1,6 +1,6 @@
 # miscfuncs.zsh - z shell miscellaneous functions
 #
-# (c) 2023 Michael Berry <trismegustis@gmail.com>
+# (c) 2025 Michael Berry <trismegustis@gmail.com>
 
 # Print more information to user if positive
 VERBOSE=1
@@ -86,8 +86,9 @@ trim() { print - $1; }
 # all clients connected to one session must view the same window.
 # This problem can be solved in tmux by spawning two separate sessions and
 # synchronizing the second one to the windows of the first,
-# then pointing a second new session to the first.
-launch_tmux() {
+# then pointing a second new session to the first. Passing new-window as a
+# second argument creates and focuses on a new window in the base session.
+spawn_tmux() {
     emulate -RL zsh
 
     if [[ ! $ARGC -ge 1 ]]; then
@@ -104,10 +105,9 @@ launch_tmux() {
     else
         # Make sure we are not already in a tmux session
         if [[ -z "$TMUX" ]]; then
-            print - "Launching copy of base session $base_session ..."
-            # Session id is base session + date and time to prevent conflict
-            dt=$(command -p date +"%Y-%m-%d (%H%M%S)")
-            session_id="$base_session $dt"
+            print - "Launching copy of base session '$base_session' ..."
+            # Session id is base session + numbered attached session
+            session_id="$base_session $tmux_nb"
             # Create a new session (without attaching it) and link to base session
             # to share windows
             tmux new-session -d -t $base_session -s $session_id
@@ -124,7 +124,7 @@ launch_tmux() {
 # Add private ssh key to keychain
 add_ssh_key_to_keychain() {
     if [[ isLinux ]]; then
-        /usr/bin/keychain $HOME/.ssh/id_ed25519
+        /usr/bin/keychain -q -Q $HOME/.ssh/id_ed25519
         source $HOME/.keychain/$HOST-sh
     fi
 }
