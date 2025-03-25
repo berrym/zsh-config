@@ -76,6 +76,15 @@ loadPromptTheme() {
     fi
 }
 
+# Push current screen contents into scrollback buffer when clearing screen
+ctrl_l() {
+    builtin print -rn -- $'\r\e[0J\e[H\e[22J' >"$TTY"
+    builtin zle .reset-prompt
+    builtin zle -R
+}
+zle -N ctrl_l
+bindkey '^l' ctrl_l
+
 # Trim surrounding whitespace in a string
 # Works because zsh automatically trims by assigning to variables and by passing arguments
 trim() { print - $1; }
